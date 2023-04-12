@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@common": ["src/common"],
+      "@configs": ["src/configs"],
       "@environments": ["src/environments"]
     }
   }
