@@ -20,7 +20,12 @@
     "paths": {
       "@common": ["src/common"],
       "@configs": ["src/configs"],
-      "@environments": ["src/environments"]
+      "@enums": ["src/enums"],
+      "@entities": ["src/entities"],
+      "@environments": ["src/environments"],
+      "@modules": ["src/modules"],
+      "@utils": ["src/utils"]
     }
-  }
+  },
+  "exclude": ["node_modules", "coverage", "document", "dist", "backup", "**/*.spec.ts"]
 }

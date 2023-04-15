@@ -1,12 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { HttpExceptionFilter } from './common/filters';
-import { LoggerMiddleware } from './common/middlewares';
-import { ValidationPipe } from './common/pipes';
-import { HealthModule } from './modules/health/health.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpExceptionFilter, LoggerMiddleware, ValidationPipe } from '@common';
+import { TypeOrmConfigService } from '@configs';
+import { HealthModule } from '@modules';
 
 @Module({
-  imports: [HealthModule],
+  imports: [
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
+    }),
+    HealthModule,
+  ],
   controllers: [],
   providers: [
     {

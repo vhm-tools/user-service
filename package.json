@@ -1,11 +1,12 @@
 {
-  "name": "app-service",
+  "name": "user-service",
   "version": "0.0.1",
   "description": "VHM Tools",
   "author": "vhm",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prepare": "husky install",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -19,7 +20,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "husky install"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d src/typeorm.config.ts",
+    "db:drop": "npm run typeorm schema:drop",
+    "db:sync": "npm run typeorm -- migration:run",
+    "db:down": "npm run typeorm -- migration:revert",
+    "db:gen": "npm run typeorm -- migration:generate migrations/$npm_config_name",
+    "db:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:create migrations/$npm_config_name"
   },
   "dependencies": {
     "@nestjs/axios": "^2.0.0",

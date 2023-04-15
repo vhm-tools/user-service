@@ -14,6 +14,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: env.POSTGRES_DB,
       entities: [`${__dirname}/**/entities/*.entity{.ts,.js}`],
       synchronize: false,
+      // autoLoadEntities: true,
       logging: env.DB_LOGGING === 'true',
     };
   }
