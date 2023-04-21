@@ -5,14 +5,19 @@ import {
   VersioningType,
   VERSION_NEUTRAL,
 } from '@nestjs/common';
-import helmet from 'helmet';
 import { MainModule } from './main.module';
+import helmet from 'helmet';
+import * as cookieParser from 'cookie-parser';
 import env from '@environments';
+import { NodeEnv } from '@enums';
+import { setupSwagger } from '@configs';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule);
 
-  if (env.NODE_ENV === 'production') {
+  app.use(cookieParser(env.COOKIE_SECRET));
+
+  if (env.NODE_ENV === NodeEnv.PRODUCTION) {
     app.use(
       helmet({
         frameguard: {
@@ -39,6 +44,14 @@ async function bootstrap() {
         path: 'health/(.*)',
         method: RequestMethod.GET,
       },
+      {
+        path: 'auth/github(.*)',
+        method: RequestMethod.ALL,
+      },
+      {
+        path: 'auth/logout',
+        method: RequestMethod.ALL,
+      },
     ],
   });
 
@@ -46,6 +59,8 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: VERSION_NEUTRAL,
   });
+
+  setupSwagger(app);
 
   await app.listen(env.PORT);
 
