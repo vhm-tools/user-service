@@ -1,4 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { SnakeCaseNamingStrategy } from '@utils';
 import env from '@environments';
 
 const {
@@ -18,6 +19,7 @@ const dataSourceOptions: DataSourceOptions = {
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
   entities: [`${__dirname}/**/entities/*.entity{.ts,.js}`],
+  namingStrategy: new SnakeCaseNamingStrategy(),
   migrationsTableName: '__migrations',
   migrations: ['migrations/*.ts'],
   logging: DB_LOGGING === 'true',

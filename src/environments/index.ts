@@ -1,3 +1,4 @@
+import { NodeEnv } from '@enums';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,9 +15,17 @@ const {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_DB,
+  ACCESS_TOKEN_SECRET,
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN,
+  COOKIE_SECRET,
+  BCRYPT_SALT,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  GITHUB_CALLBACK_URL,
 } = process.env;
 
-if (NODE_ENV && !['test', 'production', 'development'].includes(NODE_ENV)) {
+if (NODE_ENV && !Object.values(NodeEnv).includes(NODE_ENV as NodeEnv)) {
   throw new Error('NODE_ENV must be either test, production or development');
 }
 
@@ -32,6 +41,23 @@ if (!POSTGRES_HOST || !POSTGRES_PORT || !POSTGRES_DB) {
   throw new Error('POSTGRES config is not define');
 }
 
+if (
+  !ACCESS_TOKEN_SECRET ||
+  !ACCESS_TOKEN_EXPIRES_IN ||
+  !REFRESH_TOKEN_EXPIRES_IN ||
+  !BCRYPT_SALT
+) {
+  throw new Error('Access token config is not define');
+}
+
+if (!COOKIE_SECRET) {
+  throw new Error('Cookie secret config is not define');
+}
+
+if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET || !GITHUB_CALLBACK_URL) {
+  throw new Error('Github auth config is not define');
+}
+
 export default {
   PORT,
   NODE_ENV,
@@ -44,4 +70,12 @@ export default {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_DB,
+  ACCESS_TOKEN_SECRET,
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN,
+  COOKIE_SECRET,
+  BCRYPT_SALT,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  GITHUB_CALLBACK_URL,
 };
