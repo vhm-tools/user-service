@@ -21,10 +21,12 @@
       "@common": ["src/common"],
       "@configs": ["src/configs"],
       "@enums": ["src/enums"],
-      "@entities": ["src/entities"],
       "@environments": ["src/environments"],
       "@modules": ["src/modules"],
-      "@utils": ["src/utils"]
+      "@utils": ["src/utils"],
+      "@entities": ["databases/postgres/entities"],
+      "@enums-db": ["databases/enums"],
+      "@interfaces-db": ["databases/interfaces"]
     }
   },
   "exclude": ["node_modules", "coverage", "document", "dist", "backup", "**/*.spec.ts"]

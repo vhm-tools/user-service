@@ -29,7 +29,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-Installation
-Love
-Vim
