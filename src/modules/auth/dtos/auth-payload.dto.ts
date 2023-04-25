@@ -1,4 +1,4 @@
-import { UserRole } from '@enums';
+import { UserRole } from '@enums-db';
 import { Request } from 'express';
 
 export interface AuthPayload {

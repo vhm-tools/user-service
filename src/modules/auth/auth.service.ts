@@ -1,14 +1,16 @@
-import { UserAgent } from '@common';
-import { OAuthProfile, User } from '@entities';
-import { NodeEnv, UserStatus } from '@enums';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
-import { AuthPayload, GithubPayload, TokenResponse } from './dtos';
 import env from '@environments';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
+
+import { AuthPayload, GithubPayload, TokenResponse } from './dtos';
+import { OAuthProfile, User } from '@entities';
+import { UserAgent } from '@interfaces-db';
+import { UserStatus } from '@enums-db';
+import { NodeEnv } from '@enums';
 
 @Injectable()
 export class AuthService {

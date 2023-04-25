@@ -24,3 +24,7 @@ services:
       interval: 10s
       timeout: 30s
       retries: 3
+
+networks:
+  vhm_tools:
+    driver: bridge

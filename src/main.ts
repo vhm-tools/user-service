@@ -46,11 +46,11 @@ async function bootstrap() {
       },
       {
         path: 'auth/github(.*)',
-        method: RequestMethod.ALL,
+        method: RequestMethod.GET,
       },
       {
         path: 'auth/logout',
-        method: RequestMethod.ALL,
+        method: RequestMethod.GET,
       },
     ],
   });
@@ -62,6 +62,19 @@ async function bootstrap() {
 
   setupSwagger(app);
 
+  // app.connectMicroservice({
+  //   transport: Transport.RMQ,
+  //   options: {
+  //     urls: [env.RABBITMQ_URL],
+  //     queue: env.RABBITMQ_QUEUE,
+  //     prefetchCount: 1,
+  //     queueOptions: {
+  //       durable: false,
+  //     },
+  //   },
+  // });
+
+  // await app.startAllMicroservices();
   await app.listen(env.PORT);
 
   Logger.log(`🚀  Server is listening on port ${env.PORT}`, 'Bootstrap');

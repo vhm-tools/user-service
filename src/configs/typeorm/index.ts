@@ -13,7 +13,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: env.POSTGRES_USER,
       password: env.POSTGRES_PASSWORD,
       database: env.POSTGRES_DB,
-      entities: [`${__dirname}/**/entities/*.entity{.ts,.js}`],
+      entities: [`databases/**/entities/*.entity{.ts,.js}`],
       namingStrategy: new SnakeCaseNamingStrategy(),
       autoLoadEntities: true,
       synchronize: false,

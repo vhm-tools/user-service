@@ -10,6 +10,8 @@ const {
   REQ_LOGGING,
   DB_LOGGING,
   CORS_ORIGINS,
+  NOTIFICATION_HOST,
+  NOTIFICATION_PORT,
   POSTGRES_HOST,
   POSTGRES_PORT,
   POSTGRES_USER,
@@ -23,6 +25,10 @@ const {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
   GITHUB_CALLBACK_URL,
+  RABBITMQ_QUEUE,
+  RABBITMQ_URL,
+  RABBITMQ_USERNAME,
+  RABBITMQ_PASSWORD,
 } = process.env;
 
 if (NODE_ENV && !Object.values(NodeEnv).includes(NODE_ENV as NodeEnv)) {
@@ -35,6 +41,10 @@ if (!CORS_ORIGINS) {
 
 if (!PORT) {
   throw new Error('PORT is not define');
+}
+
+if (!NOTIFICATION_HOST || !NOTIFICATION_PORT) {
+  throw new Error('Notification config is not define');
 }
 
 if (!POSTGRES_HOST || !POSTGRES_PORT || !POSTGRES_DB) {
@@ -58,12 +68,23 @@ if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET || !GITHUB_CALLBACK_URL) {
   throw new Error('Github auth config is not define');
 }
 
+if (
+  !RABBITMQ_QUEUE ||
+  !RABBITMQ_URL ||
+  !RABBITMQ_USERNAME ||
+  !RABBITMQ_PASSWORD
+) {
+  throw new Error('RabbitMQ config is not define');
+}
+
 export default {
   PORT,
   NODE_ENV,
   API_VERSION,
   DB_LOGGING,
   REQ_LOGGING,
+  NOTIFICATION_HOST,
+  NOTIFICATION_PORT,
   CORS_ORIGINS,
   POSTGRES_HOST,
   POSTGRES_PORT,
@@ -78,4 +99,8 @@ export default {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
   GITHUB_CALLBACK_URL,
+  RABBITMQ_QUEUE,
+  RABBITMQ_URL,
+  RABBITMQ_USERNAME,
+  RABBITMQ_PASSWORD,
 };
