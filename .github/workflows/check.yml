@@ -22,6 +22,7 @@ jobs:
     - name: Checkout repository and submodules
       uses: actions/checkout@v3
       with:
+        token: ${{ secrets.FGPAT_TOKEN }}
         submodules: recursive
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
