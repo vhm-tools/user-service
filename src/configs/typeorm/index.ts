@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import env from '@environments';
 import { SnakeCaseNamingStrategy } from '@utils';
+import env from '@environments';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -13,7 +13,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: env.POSTGRES_USER,
       password: env.POSTGRES_PASSWORD,
       database: env.POSTGRES_DB,
-      entities: [`databases/**/entities/*.entity{.ts,.js}`],
+      entities: [`${__dirname}/databases/**/entities/*.entity{.ts,.js}`],
       namingStrategy: new SnakeCaseNamingStrategy(),
       autoLoadEntities: true,
       synchronize: false,

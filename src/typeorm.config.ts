@@ -18,7 +18,7 @@ const dataSourceOptions: DataSourceOptions = {
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
-  entities: [`databases/**/entities/*.entity{.ts,.js}`],
+  entities: [`${__dirname}/databases/**/entities/*.entity{.ts,.js}`],
   namingStrategy: new SnakeCaseNamingStrategy(),
   migrationsTableName: '__migrations',
   migrations: ['migrations/*.ts'],

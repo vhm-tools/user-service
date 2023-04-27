@@ -16,8 +16,7 @@ import env from '@environments';
         options: {
           urls: [env.RABBITMQ_URL],
           queue: env.RABBITMQ_QUEUE,
-          noAck: false,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'm-api-key': env.VHM_API_KEY },
           queueOptions: {
             durable: false,
           },
@@ -26,19 +25,5 @@ import env from '@environments';
     ]),
   ],
   controllers: [HealthController],
-  // providers: [
-  //   {
-  //     provide: 'NOTIFICATION_SERVICE',
-  //     useFactory: () => {
-  //       return ClientProxyFactory.create({
-  //         transport: Transport.TCP,
-  //         options: {
-  //           host: env.NOTIFICATION_HOST,
-  //           port: +env.NOTIFICATION_PORT,
-  //         },
-  //       });
-  //     },
-  //   },
-  // ],
 })
 export class HealthModule {}

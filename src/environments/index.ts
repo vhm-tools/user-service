@@ -9,6 +9,7 @@ const {
   API_VERSION,
   REQ_LOGGING,
   DB_LOGGING,
+  VHM_API_KEY,
   CORS_ORIGINS,
   NOTIFICATION_HOST,
   NOTIFICATION_PORT,
@@ -77,6 +78,10 @@ if (
   throw new Error('RabbitMQ config is not define');
 }
 
+if (!VHM_API_KEY) {
+  throw new Error('API key config is not define');
+}
+
 export default {
   PORT,
   NODE_ENV,
@@ -86,6 +91,7 @@ export default {
   NOTIFICATION_HOST,
   NOTIFICATION_PORT,
   CORS_ORIGINS,
+  VHM_API_KEY,
   POSTGRES_HOST,
   POSTGRES_PORT,
   POSTGRES_USER,
