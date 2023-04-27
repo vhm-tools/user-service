@@ -4,4 +4,4 @@
 
 [submodule "libs"]
 	path = libs
-  url = git@github.com:vhm-tools/common-libs.git
+	url = git@github.com:vhm-tools/common-libs.git
