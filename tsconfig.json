@@ -26,7 +26,10 @@
       "@utils": ["src/utils"],
       "@entities": ["databases/postgres/entities"],
       "@enums-db": ["databases/enums"],
-      "@interfaces-db": ["databases/interfaces"]
+      "@interfaces-db": ["databases/interfaces"],
+      "@share-libs": ["libs"],
+      "@infra-common": ["libs/infra-common"],
+      "@infra-modules": ["libs/infra-modules"]
     }
   },
   "exclude": ["node_modules", "coverage", "document", "dist", "backup", "**/*.spec.ts"]

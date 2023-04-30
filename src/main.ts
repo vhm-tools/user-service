@@ -15,7 +15,7 @@ import { setupSwagger } from '@configs';
 async function bootstrap() {
   const app = await NestFactory.create(MainModule);
 
-  app.use(cookieParser(env.COOKIE_SECRET));
+  app.use(cookieParser(env.AUTH_SECRET));
 
   if (env.NODE_ENV === NodeEnv.PRODUCTION) {
     app.use(

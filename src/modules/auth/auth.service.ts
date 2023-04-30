@@ -145,7 +145,8 @@ export class AuthService {
 
   async logout(res: Response, payload: AuthPayload): Promise<void> {
     await this.userRepository.update(
-      { id: payload.id },
+      // { id: payload.id },
+      {},
       { lastLogin: null, userAgent: null },
     );
 
@@ -156,6 +157,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
     if (hasRefreshToken) {
       const refreshToken = this.jwtService.sign(payload, {
+        secret: env.REFRESH_TOKEN_SECRET,
         expiresIn: +env.REFRESH_TOKEN_EXPIRES_IN,
       });
       return { accessToken, refreshToken };
@@ -168,7 +170,7 @@ export class AuthService {
     accessToken: string,
     refreshToken?: string,
   ): void {
-    res.cookie('vhm_token', `Bearer ${accessToken}`, {
+    res.cookie('vhm_token', accessToken, {
       httpOnly: true,
       secure: true,
       signed: true,
@@ -180,7 +182,6 @@ export class AuthService {
       res.cookie('vhm_refresh_token', refreshToken, {
         httpOnly: true,
         secure: true,
-        signed: true,
         maxAge: +env.REFRESH_TOKEN_EXPIRES_IN * 1000,
         sameSite: env.NODE_ENV === NodeEnv.PRODUCTION ? 'lax' : 'strict',
       });

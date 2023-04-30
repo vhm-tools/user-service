@@ -16,7 +16,7 @@ import env from '@environments';
     TypeOrmModule.forFeature([User, OAuthProfile]),
     JwtModule.register({
       global: true,
-      secret: env.ACCESS_TOKEN_SECRET,
+      secret: env.AUTH_SECRET,
       signOptions: {
         expiresIn: +env.ACCESS_TOKEN_EXPIRES_IN,
       },

@@ -1,30 +1,25 @@
 version: "3"
 name: "vhm-tools"
 services:
-  postgres:
-    image: postgres:14
+  user_service:
+    image: 102205/tools-user-service:1.0
+    container_name: user_service-tools
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    env_file:
+      - .env
+    volumes:
+      - /app/node_modules
+      - .:/app
     ports:
-      - 2340:5432
-    healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'vhm-tools']
-      interval: 30s
-      timeout: 20s
-      retries: 3
-    environment:
-      POSTGRES_USER: vhm-tools
-      POSTGRES_PASSWORD: vhm-tools
-      POSTGRES_DB: vhm-tools
-
-  redis:
-    image: redis
-    ports:
-      - 9730:6379
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 10s
-      timeout: 30s
-      retries: 3
+      - 1515:1515
+    networks:
+      - vhm_tools
 
 networks:
   vhm_tools:
-    driver: bridge
+    name: vhm-tools-nw
+    external: true
+

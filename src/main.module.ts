@@ -8,9 +8,9 @@ import {
   ValidationPipe,
 } from '@common';
 import { TypeOrmConfigService } from '@configs';
-import { AuthModule, HealthModule } from '@modules';
+import { AuthModule, HealthModule, NotificationModule } from '@modules';
 
-const modules = [HealthModule, AuthModule];
+const modules = [HealthModule, AuthModule, NotificationModule];
 
 @Module({
   imports: [

@@ -32,11 +32,9 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: env.ACCESS_TOKEN_SECRET,
+        secret: env.AUTH_SECRET,
       });
 
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
       request['user'] = payload;
     } catch (error: any) {
       throw new UnauthorizedException();
@@ -45,12 +43,11 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractToken(request: Request): string | undefined {
-    const [type, token] =
-      request.signedCookies['vhm_token']?.split(' ') ||
-      request.cookies['vhm_token']?.split(' ') ||
-      request.headers.authorization?.split(' ') ||
-      [];
+    const token =
+      request.signedCookies['vhm_token'] ||
+      request.cookies['vhm_token'] ||
+      request.headers['authorization'];
 
-    return type === 'Bearer' ? token : undefined;
+    return token;
   }
 }

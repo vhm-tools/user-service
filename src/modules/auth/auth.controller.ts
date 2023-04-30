@@ -9,11 +9,16 @@ import {
 } from '@nestjs/common';
 import { GithubOAuthGuard, Public } from '@common';
 import { Response } from 'express';
-import { ApiExcludeEndpoint, ApiNoContentResponse } from '@nestjs/swagger';
+import {
+  ApiExcludeEndpoint,
+  ApiNoContentResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthRequestPayload } from './dtos';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
