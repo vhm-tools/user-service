@@ -17,6 +17,8 @@ services:
       - 1515:1515
     networks:
       - vhm_tools
+    depends_on:
+      - pg_tools
 
 networks:
   vhm_tools:

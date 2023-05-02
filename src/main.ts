@@ -9,15 +9,17 @@ import { MainModule } from './main.module';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import env from '@environments';
-import { NodeEnv } from '@enums';
 import { setupSwagger } from '@configs';
+import { getLogsLevel, isProduction, runInCluster } from '@utils';
 
 async function bootstrap() {
-  const app = await NestFactory.create(MainModule);
+  const app = await NestFactory.create(MainModule, {
+    logger: getLogsLevel(),
+  });
 
   app.use(cookieParser(env.AUTH_SECRET));
 
-  if (env.NODE_ENV === NodeEnv.PRODUCTION) {
+  if (isProduction) {
     app.use(
       helmet({
         frameguard: {
@@ -45,12 +47,8 @@ async function bootstrap() {
         method: RequestMethod.GET,
       },
       {
-        path: 'auth/github(.*)',
-        method: RequestMethod.GET,
-      },
-      {
-        path: 'auth/logout',
-        method: RequestMethod.GET,
+        path: 'auth/(.*)',
+        method: RequestMethod.ALL,
       },
     ],
   });
@@ -79,4 +77,5 @@ async function bootstrap() {
 
   Logger.log(`🚀  Server is listening on port ${env.PORT}`, 'Bootstrap');
 }
-bootstrap();
+
+runInCluster(bootstrap);

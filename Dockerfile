@@ -4,11 +4,11 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
-RUN npm run build
+RUN yarn build
 
 FROM node:18-alpine AS production
 
@@ -19,8 +19,9 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install --only=production
+RUN npm ci --only=production
 
-COPY --from=builder /usr/src/app ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/dist ./dist
 
 CMD ["npm", "run", "start:prod"]

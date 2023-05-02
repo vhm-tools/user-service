@@ -1,4 +1,6 @@
+import { User } from '@entities';
 import { UserRole } from '@enums-db';
+import { PartialType, PickType } from '@nestjs/swagger';
 import { Request } from 'express';
 
 export interface AuthPayload {
@@ -14,3 +16,7 @@ export interface TokenResponse {
 export class AuthRequestPayload extends Request {
   user: AuthPayload;
 }
+
+export class LoginInfoPayload extends PartialType(
+  PickType(User, ['id', 'refreshToken', 'lastLogin', 'userAgent'] as const),
+) {}

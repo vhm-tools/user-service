@@ -6,13 +6,27 @@ import { Request, Response, NextFunction } from 'express';
 export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger();
 
-  use(req: Request, _res: Response, next: NextFunction): void {
+  use(req: Request, res: Response, next: NextFunction): void {
     if (env.REQ_LOGGING) {
-      this.logger.log(
-        `💬 ${req.httpVersion} ${req.method} ${req.originalUrl} ${
-          req.headers['user-agent'] || req.headers
-        })`,
-      );
+      res.on('finish', () => {
+        const { method, originalUrl } = req;
+        const { statusCode, statusMessage } = res;
+
+        const message = `${method} ${originalUrl} ${statusCode} ${statusMessage}`;
+        // `💬 ${req.httpVersion} ${req.method} ${req.originalUrl} ${
+        //   req.headers['user-agent'] || req.headers
+        // })`,
+
+        if (statusCode >= 500) {
+          return this.logger.error(message);
+        }
+
+        if (statusCode >= 400) {
+          return this.logger.warn(message);
+        }
+
+        return this.logger.log(message);
+      });
     }
     next();
   }

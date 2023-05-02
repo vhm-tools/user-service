@@ -2,7 +2,6 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-inoremap <silent> <Plug>(-fzf-complete-finish) l
 inoremap <silent> <expr> <Plug>(coc-snippets-expand-jump) coc#_insert_key('request', 'coc-snippets-expand-jump', 1)
 inoremap <silent> <expr> <Plug>(coc-snippets-expand) coc#_insert_key('request', 'coc-snippets-expand', 1)
 imap <C-G>S <Plug>ISurround
@@ -105,14 +104,6 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
-nnoremap <silent> <Plug>(multiple-cursors-new-word) :call multiple_cursors#new('v', 1)
-nnoremap <silent> <Plug>(multiple-cursors-new) :call multiple_cursors#new('v', 0)
-nnoremap <silent> <Plug>(multiple-cursors-skip) :call multiple_cursors#skip()
-nnoremap <silent> <Plug>(multiple-cursors-prev) :call multiple_cursors#prev()
-nnoremap <silent> <Plug>(-fzf-complete-finish) a
-nnoremap <Plug>(-fzf-:) :
-nnoremap <Plug>(-fzf-/) /
-nnoremap <Plug>(-fzf-vim-do) :execute g:__fzf_command
 snoremap <C-R> "_c
 snoremap <silent> <C-H> c
 snoremap <silent> <Del> c
@@ -659,7 +650,6 @@ set shiftwidth=2
 set showtabline=2
 set smartcase
 set softtabstop=2
-set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.snap
 set noswapfile
 set tabline=%!lightline#tabline()
 set tabstop=2
@@ -679,57 +669,20 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +27 src/entities/user.entity.ts
-badd +10 src/entities/oauth-profile.entity.ts
-badd +6 src/entities/base.entity.ts
-badd +1 src/modules/health/health.controller.ts
-badd +1 src/modules/health/health.module.ts
-badd +2 src/modules/index.ts
-badd +22 src/modules/auth/auth.module.ts
-badd +46 src/modules/auth/auth.controller.ts
-badd +1 src/main.ts
-badd +4 src/main.module.ts
-badd +168 src/modules/auth/auth.service.ts
-badd +3 src/entities/index.ts
-badd +2 src/common/decorators/index.ts
-badd +4 src/common/decorators/skip-auth.ts
-badd +1 src/common/guards/index.ts
-badd +25 src/common/guards/auth.guard.ts
-badd +1 src/common/index.ts
-badd +1 src/common/constants/index.ts
-badd +1 src/common/constants/secret.ts
-badd +31 .env
-badd +51 src/environments/index.ts
-badd +23 src/modules/auth/strategies/github.strategy.ts
-badd +31 package.json
-badd +4 src/common/guards/github.guard.ts
-badd +17 .eslintrc.js
-badd +0 src/modules/auth/strategies/index.ts
-badd +1 src/modules/auth/dtos/github-payload.dto.ts
-badd +14 src/modules/auth/dtos/auth-payload.dto.ts
-badd +2 src/modules/auth/dtos/index.ts
-badd +4 src/common/interfaces/user-agent.ts
-badd +0 src/common/interfaces/index.ts
-badd +10 src/common/decorators/cookie.ts
-badd +3 src/enums/index.ts
-badd +4 src/enums/node-env.enum.ts
-badd +0 src/utils/index.ts
-badd +5 src/utils/naming-strategy.ts
-badd +18 src/configs/typeorm/index.ts
-badd +22 src/typeorm.config.ts
-badd +2 src/configs/index.ts
-badd +1 src/configs/swagger/index.ts
-badd +31 tsconfig.json
-badd +9 src/common/filters/http-exception.filter.ts
+badd +19 src/modules/auth/strategies/github.strategy.ts
+badd +29 src/modules/auth/strategies/jwt-refresh-token.strategy.ts
+badd +2 src/modules/auth/strategies/index.ts
+badd +76 package.json
+badd +6 src/common/decorators/cookie.ts
+badd +0 src/main.ts
+badd +161 src/modules/auth/auth.service.ts
 argglobal
 %argdel
 tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
 tabrewind
-edit src/modules/auth/auth.controller.ts
+edit src/modules/auth/strategies/jwt-refresh-token.strategy.ts
 argglobal
-balt src/common/decorators/cookie.ts
+balt src/modules/auth/strategies/index.ts
 let s:cpo_save=&cpo
 set cpo&vim
 inoremap <buffer> <silent> <M-n> :call AutoPairsJump()a
@@ -921,18 +874,19 @@ setlocal nowrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 25 - ((10 * winheight(0) + 19) / 38)
+let s:l = 7 - ((6 * winheight(0) + 19) / 38)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 25
+keepjumps 7
 normal! 0
 tabnext
 edit src/modules/auth/auth.service.ts
 argglobal
-balt src/entities/oauth-profile.entity.ts
 let s:cpo_save=&cpo
 set cpo&vim
+inoremap <buffer> <nowait> <silent> <C-K> =coc#snippet#jump(0, 0)
+inoremap <buffer> <nowait> <silent> <C-J> =coc#snippet#jump(1, 0)
 inoremap <buffer> <silent> <M-n> :call AutoPairsJump()a
 inoremap <buffer> <silent> <expr> <M-p> AutoPairsToggle()
 inoremap <buffer> <silent> <M-b> =AutoPairsBackInsert()
@@ -947,6 +901,8 @@ inoremap <buffer> <silent> <M-]> =AutoPairsMoveCharacter(']')
 inoremap <buffer> <silent> <M-[> =AutoPairsMoveCharacter('[')
 inoremap <buffer> <silent> <M-)> =AutoPairsMoveCharacter(')')
 inoremap <buffer> <silent> <M-(> =AutoPairsMoveCharacter('(')
+snoremap <buffer> <nowait> <silent> <NL> :call coc#snippet#jump(1, 0)
+snoremap <buffer> <nowait> <silent>  :call coc#snippet#jump(0, 0)
 nmap <buffer>  hp <Plug>(GitGutterPreviewHunk)
 nmap <buffer>  hu <Plug>(GitGutterUndoHunk)
 nmap <buffer>  hs <Plug>(GitGutterStageHunk)
@@ -969,9 +925,13 @@ xmap <buffer> ac <Plug>(GitGutterTextObjectOuterVisual)
 omap <buffer> ac <Plug>(GitGutterTextObjectOuterPending)
 xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
 omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
+snoremap <buffer> <nowait> <silent> <C-K> :call coc#snippet#jump(0, 0)
+snoremap <buffer> <nowait> <silent> <C-J> :call coc#snippet#jump(1, 0)
 noremap <buffer> <silent> <M-n> :call AutoPairsJump()
 noremap <buffer> <silent> <M-p> :call AutoPairsToggle()
 inoremap <buffer> <silent>  =AutoPairsDelete()
+inoremap <buffer> <nowait> <silent> <NL> =coc#snippet#jump(1, 0)
+inoremap <buffer> <nowait> <silent>  =coc#snippet#jump(0, 0)
 inoremap <buffer> <silent>   =AutoPairsSpace()
 inoremap <buffer> <silent> " =AutoPairsInsert('"')
 inoremap <buffer> <silent> ' =AutoPairsInsert('''')
@@ -1122,413 +1082,12 @@ setlocal nowrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 97 - ((13 * winheight(0) + 19) / 38)
+let s:l = 161 - ((23 * winheight(0) + 19) / 38)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 97
-normal! 0
-tabnext
-edit .env
-argglobal
-let s:cpo_save=&cpo
-set cpo&vim
-inoremap <buffer> <silent> <M-n> :call AutoPairsJump()a
-inoremap <buffer> <silent> <expr> <M-p> AutoPairsToggle()
-inoremap <buffer> <silent> <M-b> =AutoPairsBackInsert()
-inoremap <buffer> <silent> <M-e> =AutoPairsFastWrap()
-inoremap <buffer> <silent> <C-H> =AutoPairsDelete()
-inoremap <buffer> <silent> <BS> =AutoPairsDelete()
-inoremap <buffer> <silent> <M-'> =AutoPairsMoveCharacter('''')
-inoremap <buffer> <silent> <M-"> =AutoPairsMoveCharacter('"')
-inoremap <buffer> <silent> <M-}> =AutoPairsMoveCharacter('}')
-inoremap <buffer> <silent> <M-{> =AutoPairsMoveCharacter('{')
-inoremap <buffer> <silent> <M-]> =AutoPairsMoveCharacter(']')
-inoremap <buffer> <silent> <M-[> =AutoPairsMoveCharacter('[')
-inoremap <buffer> <silent> <M-)> =AutoPairsMoveCharacter(')')
-inoremap <buffer> <silent> <M-(> =AutoPairsMoveCharacter('(')
-nmap <buffer>  hp <Plug>(GitGutterPreviewHunk)
-nmap <buffer>  hu <Plug>(GitGutterUndoHunk)
-nmap <buffer>  hs <Plug>(GitGutterStageHunk)
-xmap <buffer>  hs <Plug>(GitGutterStageHunk)
-inoremap <buffer> <silent> § =AutoPairsMoveCharacter('''')
-inoremap <buffer> <silent> ¢ =AutoPairsMoveCharacter('"')
-inoremap <buffer> <silent> © =AutoPairsMoveCharacter(')')
-inoremap <buffer> <silent> ¨ =AutoPairsMoveCharacter('(')
-inoremap <buffer> <silent> î :call AutoPairsJump()a
-inoremap <buffer> <silent> <expr> ð AutoPairsToggle()
-inoremap <buffer> <silent> â =AutoPairsBackInsert()
-inoremap <buffer> <silent> å =AutoPairsFastWrap()
-inoremap <buffer> <silent> ý =AutoPairsMoveCharacter('}')
-inoremap <buffer> <silent> û =AutoPairsMoveCharacter('{')
-inoremap <buffer> <silent> Ý =AutoPairsMoveCharacter(']')
-inoremap <buffer> <silent> Û =AutoPairsMoveCharacter('[')
-nmap <buffer> [c <Plug>(GitGutterPrevHunk)
-nmap <buffer> ]c <Plug>(GitGutterNextHunk)
-xmap <buffer> ac <Plug>(GitGutterTextObjectOuterVisual)
-omap <buffer> ac <Plug>(GitGutterTextObjectOuterPending)
-xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
-omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
-noremap <buffer> <silent> <M-n> :call AutoPairsJump()
-noremap <buffer> <silent> <M-p> :call AutoPairsToggle()
-inoremap <buffer> <silent>  =AutoPairsDelete()
-inoremap <buffer> <silent>   =AutoPairsSpace()
-inoremap <buffer> <silent> " =AutoPairsInsert('"')
-inoremap <buffer> <silent> ' =AutoPairsInsert('''')
-inoremap <buffer> <silent> ( =AutoPairsInsert('(')
-inoremap <buffer> <silent> ) =AutoPairsInsert(')')
-noremap <buffer> <silent> î :call AutoPairsJump()
-noremap <buffer> <silent> ð :call AutoPairsToggle()
-inoremap <buffer> <silent> [ =AutoPairsInsert('[')
-inoremap <buffer> <silent> ] =AutoPairsInsert(']')
-inoremap <buffer> <silent> ` =AutoPairsInsert('`')
-inoremap <buffer> <silent> { =AutoPairsInsert('{')
-inoremap <buffer> <silent> } =AutoPairsInsert('}')
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal backupcopy=
-setlocal balloonexpr=
-setlocal nobinary
-setlocal nobreakindent
-setlocal breakindentopt=
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),0],:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinscopedecls=public,protected,private
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=:#
-setlocal commentstring=#\ %s
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal cursorlineopt=both
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal expandtab
-if &filetype != 'sh'
-setlocal filetype=sh
-endif
-setlocal fillchars=
-setlocal fixendofline
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-setlocal foldmethod=manual
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldtext=foldtext()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal formatprg=
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=-1
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=GetShIndent()
-setlocal indentkeys=0{,0},0),0],!^F,o,O,e,0=then,0=do,0=else,0=elif,0=fi,0=esac,0=done,0=end,),0=;;,0=;&,0=fin,0=fil,0=fip,0=fir,0=fix
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255
-setlocal keywordprg=
-setlocal nolinebreak
-setlocal nolisp
-setlocal lispoptions=
-setlocal lispwords=
-setlocal nolist
-setlocal listchars=
-setlocal nomacmeta
-setlocal makeencoding=
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=bin,octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-set relativenumber
-setlocal relativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal scrolloff=-1
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal showbreak=
-setlocal sidescrolloff=-1
-setlocal signcolumn=auto
-setlocal nosmartindent
-setlocal nosmoothscroll
-setlocal softtabstop=2
-setlocal nospell
-setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
-setlocal spellfile=
-setlocal spelllang=en
-setlocal spelloptions=
-setlocal statusline=%{lightline#link()}%#LightlineLeft_active_0#%(\ %{lightline#mode()}\ %)%{(&paste)?\"|\":\"\"}%(\ %{&paste?\"PASTE\":\"\"}\ %)%#LightlineLeft_active_0_1#%#LightlineLeft_active_1#%(\ %{FugitiveHead()}\ %)%{FugitiveHead()!=#\"\"&&((&readonly)||1||(&modified||!&modifiable))?\"|\":\"\"}%(\ %R\ %)%{(&readonly)&&(1||(&modified||!&modifiable))?\"|\":\"\"}%(\ %t\ %)%{(&modified||!&modifiable)?\"|\":\"\"}%(\ %M\ %)%#LightlineLeft_active_1_2#%#LightlineMiddle_active#%=%#LightlineRight_active_2_3#%#LightlineRight_active_2#%(\ %{&ff}\ %)%{1||1?\"|\":\"\"}%(\ %{&fenc!=#\"\"?&fenc:&enc}\ %)%{1?\"|\":\"\"}%(\ %{&ft!=#\"\"?&ft:\"no\ ft\"}\ %)%#LightlineRight_active_1_2#%#LightlineRight_active_1#%(\ %3p%%\ %)%#LightlineRight_active_0_1#%#LightlineRight_active_0#%(\ %3l:%-2c\ %)
-setlocal suffixesadd=
-setlocal noswapfile
-setlocal synmaxcol=3000
-if &syntax != 'sh'
-setlocal syntax=sh
-endif
-setlocal tabstop=2
-setlocal tagcase=
-setlocal tagfunc=
-setlocal tags=
-setlocal termwinkey=
-setlocal termwinscroll=10000
-setlocal termwinsize=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal thesaurusfunc=
-setlocal noundofile
-setlocal undolevels=-123456
-setlocal varsofttabstop=
-setlocal vartabstop=
-setlocal virtualedit=
-setlocal wincolor=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-set nowrap
-setlocal nowrap
-setlocal wrapmargin=0
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 29 - ((23 * winheight(0) + 19) / 38)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 29
-normal! $
-tabnext
-edit src/main.ts
-argglobal
-balt .env
-let s:cpo_save=&cpo
-set cpo&vim
-inoremap <buffer> <silent> <M-n> :call AutoPairsJump()a
-inoremap <buffer> <silent> <expr> <M-p> AutoPairsToggle()
-inoremap <buffer> <silent> <M-b> =AutoPairsBackInsert()
-inoremap <buffer> <silent> <M-e> =AutoPairsFastWrap()
-inoremap <buffer> <silent> <C-H> =AutoPairsDelete()
-inoremap <buffer> <silent> <BS> =AutoPairsDelete()
-inoremap <buffer> <silent> <M-'> =AutoPairsMoveCharacter('''')
-inoremap <buffer> <silent> <M-"> =AutoPairsMoveCharacter('"')
-inoremap <buffer> <silent> <M-}> =AutoPairsMoveCharacter('}')
-inoremap <buffer> <silent> <M-{> =AutoPairsMoveCharacter('{')
-inoremap <buffer> <silent> <M-]> =AutoPairsMoveCharacter(']')
-inoremap <buffer> <silent> <M-[> =AutoPairsMoveCharacter('[')
-inoremap <buffer> <silent> <M-)> =AutoPairsMoveCharacter(')')
-inoremap <buffer> <silent> <M-(> =AutoPairsMoveCharacter('(')
-nmap <buffer>  hp <Plug>(GitGutterPreviewHunk)
-nmap <buffer>  hu <Plug>(GitGutterUndoHunk)
-nmap <buffer>  hs <Plug>(GitGutterStageHunk)
-xmap <buffer>  hs <Plug>(GitGutterStageHunk)
-inoremap <buffer> <silent> § =AutoPairsMoveCharacter('''')
-inoremap <buffer> <silent> ¢ =AutoPairsMoveCharacter('"')
-inoremap <buffer> <silent> © =AutoPairsMoveCharacter(')')
-inoremap <buffer> <silent> ¨ =AutoPairsMoveCharacter('(')
-inoremap <buffer> <silent> î :call AutoPairsJump()a
-inoremap <buffer> <silent> <expr> ð AutoPairsToggle()
-inoremap <buffer> <silent> â =AutoPairsBackInsert()
-inoremap <buffer> <silent> å =AutoPairsFastWrap()
-inoremap <buffer> <silent> ý =AutoPairsMoveCharacter('}')
-inoremap <buffer> <silent> û =AutoPairsMoveCharacter('{')
-inoremap <buffer> <silent> Ý =AutoPairsMoveCharacter(']')
-inoremap <buffer> <silent> Û =AutoPairsMoveCharacter('[')
-nmap <buffer> [c <Plug>(GitGutterPrevHunk)
-nmap <buffer> ]c <Plug>(GitGutterNextHunk)
-xmap <buffer> ac <Plug>(GitGutterTextObjectOuterVisual)
-omap <buffer> ac <Plug>(GitGutterTextObjectOuterPending)
-xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
-omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
-noremap <buffer> <silent> <M-n> :call AutoPairsJump()
-noremap <buffer> <silent> <M-p> :call AutoPairsToggle()
-inoremap <buffer> <silent>  =AutoPairsDelete()
-inoremap <buffer> <silent>   =AutoPairsSpace()
-inoremap <buffer> <silent> " =AutoPairsInsert('"')
-inoremap <buffer> <silent> ' =AutoPairsInsert('''')
-inoremap <buffer> <silent> ( =AutoPairsInsert('(')
-inoremap <buffer> <silent> ) =AutoPairsInsert(')')
-noremap <buffer> <silent> î :call AutoPairsJump()
-noremap <buffer> <silent> ð :call AutoPairsToggle()
-inoremap <buffer> <silent> [ =AutoPairsInsert('[')
-inoremap <buffer> <silent> ] =AutoPairsInsert(']')
-inoremap <buffer> <silent> ` =AutoPairsInsert('`')
-inoremap <buffer> <silent> { =AutoPairsInsert('{')
-inoremap <buffer> <silent> } =AutoPairsInsert('}')
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal autoindent
-setlocal backupcopy=
-setlocal balloonexpr=
-setlocal nobinary
-setlocal nobreakindent
-setlocal breakindentopt=
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),0],:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinscopedecls=public,protected,private
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=//\ %s
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal cursorlineopt=both
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=%+A\ %#%f\ %#(%l\\,%c):\ %m,%C%m
-setlocal expandtab
-if &filetype != 'typescript'
-setlocal filetype=typescript
-endif
-setlocal fillchars=
-setlocal fixendofline
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-setlocal foldmethod=manual
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldtext=foldtext()
-setlocal formatexpr=CocAction('formatSelected')
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal formatprg=
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=-1
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=GetTypescriptIndent()
-setlocal indentkeys=0{,0},0),0],:,0#,!^F,o,O,e,0],0)
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,$
-setlocal keywordprg=
-setlocal nolinebreak
-setlocal nolisp
-setlocal lispoptions=
-setlocal lispwords=
-setlocal nolist
-setlocal listchars=
-setlocal nomacmeta
-setlocal makeencoding=
-setlocal makeprg=tsc\ \ $*\ %
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=bin,octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-set relativenumber
-setlocal relativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal scrolloff=-1
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal showbreak=
-setlocal sidescrolloff=-1
-setlocal signcolumn=auto
-setlocal nosmartindent
-setlocal nosmoothscroll
-setlocal softtabstop=2
-setlocal nospell
-setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
-setlocal spellfile=
-setlocal spelllang=en
-setlocal spelloptions=
-setlocal statusline=%{lightline#link()}%#LightlineLeft_active_0#%(\ %{lightline#mode()}\ %)%{(&paste)?\"|\":\"\"}%(\ %{&paste?\"PASTE\":\"\"}\ %)%#LightlineLeft_active_0_1#%#LightlineLeft_active_1#%(\ %{FugitiveHead()}\ %)%{FugitiveHead()!=#\"\"&&((&readonly)||1||(&modified||!&modifiable))?\"|\":\"\"}%(\ %R\ %)%{(&readonly)&&(1||(&modified||!&modifiable))?\"|\":\"\"}%(\ %t\ %)%{(&modified||!&modifiable)?\"|\":\"\"}%(\ %M\ %)%#LightlineLeft_active_1_2#%#LightlineMiddle_active#%=%#LightlineRight_active_2_3#%#LightlineRight_active_2#%(\ %{&ff}\ %)%{1||1?\"|\":\"\"}%(\ %{&fenc!=#\"\"?&fenc:&enc}\ %)%{1?\"|\":\"\"}%(\ %{&ft!=#\"\"?&ft:\"no\ ft\"}\ %)%#LightlineRight_active_1_2#%#LightlineRight_active_1#%(\ %3p%%\ %)%#LightlineRight_active_0_1#%#LightlineRight_active_0#%(\ %3l:%-2c\ %)
-setlocal suffixesadd=.ts,.tsx
-setlocal noswapfile
-setlocal synmaxcol=3000
-if &syntax != 'typescript'
-setlocal syntax=typescript
-endif
-setlocal tabstop=2
-setlocal tagcase=
-setlocal tagfunc=
-setlocal tags=
-setlocal termwinkey=
-setlocal termwinscroll=10000
-setlocal termwinsize=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal thesaurusfunc=
-setlocal noundofile
-setlocal undolevels=-123456
-setlocal varsofttabstop=
-setlocal vartabstop=
-setlocal virtualedit=
-setlocal wincolor=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-set nowrap
-setlocal nowrap
-setlocal wrapmargin=0
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 19 - ((18 * winheight(0) + 19) / 38)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 19
-normal! 023|
+keepjumps 161
+normal! 04|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
@@ -1541,7 +1100,6 @@ if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
-nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :

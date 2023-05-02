@@ -7,7 +7,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { GithubOAuthGuard, Public } from '@common';
+import { GithubOAuthGuard, JwtRefreshGuard, Public } from '@common';
 import { Response } from 'express';
 import {
   ApiExcludeEndpoint,
@@ -42,6 +42,17 @@ export class AuthController {
       headers,
     );
     this.authService.setAuthCookies(res, accessToken, refreshToken);
+  }
+
+  @Get('refresh-token')
+  @Public()
+  @UseGuards(JwtRefreshGuard)
+  async refreshToken(
+    @Req() { user, headers }: AuthRequestPayload,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<void> {
+    const { accessToken } = await this.authService.login(user, headers);
+    this.authService.setAuthCookies(res, accessToken);
   }
 
   @Get('logout')

@@ -1,12 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
 import env from '@environments';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-
-import { AuthPayload, GithubPayload, TokenResponse } from './dtos';
+import * as bcrypt from 'bcrypt';
+import {
+  AuthPayload,
+  GithubPayload,
+  LoginInfoPayload,
+  TokenResponse,
+} from './dtos';
 import { OAuthProfile, User } from '@entities';
 import { UserAgent } from '@interfaces-db';
 import { UserStatus } from '@enums-db';
@@ -110,6 +115,8 @@ export class AuthService {
         }
       : {};
 
+    const { accessToken, refreshToken } = this.generateToken(payload, true);
+
     // User is not login yet
     if (user.lastLogin) {
       const userLastLogin = new Date(user.lastLogin).getTime();
@@ -128,29 +135,68 @@ export class AuthService {
       }
 
       if (currentTime > expireTime) {
-        await this.userRepository.update(
-          { id: payload.id },
-          { lastLogin: new Date(), userAgent },
-        );
+        await this.setInfoLogin({
+          id: payload.id,
+          lastLogin: new Date(),
+          refreshToken,
+          userAgent,
+        });
       }
     } else {
-      await this.userRepository.update(
-        { id: payload.id },
-        { lastLogin: new Date(), userAgent },
-      );
+      await this.setInfoLogin({
+        id: payload.id,
+        lastLogin: new Date(),
+        refreshToken,
+        userAgent,
+      });
     }
 
-    return this.generateToken(payload, true);
+    return { accessToken, refreshToken };
   }
 
   async logout(res: Response, payload: AuthPayload): Promise<void> {
     await this.userRepository.update(
-      // { id: payload.id },
-      {},
-      { lastLogin: null, userAgent: null },
+      { id: payload.id },
+      { lastLogin: null, userAgent: null, refreshToken: null },
     );
 
     this.clearTokenCookies(res);
+  }
+
+  setInfoLogin(payload: LoginInfoPayload): Promise<UpdateResult> {
+    const { id, ...info } = payload;
+    if (info.refreshToken) {
+      const salt = bcrypt.genSaltSync();
+      info.refreshToken = bcrypt.hashSync(info.refreshToken, salt);
+    }
+    return this.userRepository.update({ id }, info);
+  }
+
+  async validateRefreshToken(
+    refreshToken: string,
+    userId: string,
+  ): Promise<AuthPayload> {
+    const user = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+      select: ['id', 'role', 'refreshToken'],
+    });
+
+    if (!user.refreshToken) {
+      throw new BadRequestException('User not have refresh token');
+    }
+    const isRefreshTokenMatching = bcrypt.compareSync(
+      refreshToken,
+      user.refreshToken,
+    );
+
+    if (!isRefreshTokenMatching) {
+      throw new BadRequestException('Refresh token invalid');
+    }
+
+    return {
+      id: user.id,
+      role: user.role,
+    };
   }
 
   generateToken(payload: AuthPayload, hasRefreshToken = false): TokenResponse {

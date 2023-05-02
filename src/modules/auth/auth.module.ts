@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { User, OAuthProfile } from '@entities';
-import { GithubStrategy } from './strategies';
+import { GithubStrategy, JwtRefreshStrategy } from './strategies';
 import { JwtModule } from '@nestjs/jwt';
 import env from '@environments';
 
@@ -23,6 +23,6 @@ import env from '@environments';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GithubStrategy],
+  providers: [AuthService, GithubStrategy, JwtRefreshStrategy],
 })
 export class AuthModule {}
