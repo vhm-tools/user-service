@@ -1,4 +1,7 @@
 Dockerfile
+Dockerfile.dev
+README.md
+docker-compose-dev.yml
 .dockerignore
 node_modules
 npm-debug.log
@@ -9,4 +12,3 @@ dist
 .husky
 .vim-sessions
 test
-

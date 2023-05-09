@@ -7,7 +7,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      target: development
     env_file:
       - .env
     volumes:
@@ -19,6 +18,7 @@ services:
       - vhm_tools
     depends_on:
       - pg_tools
+      - redis_tools
 
 networks:
   vhm_tools:

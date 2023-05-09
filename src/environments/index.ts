@@ -17,6 +17,8 @@ const {
   POSTGRES_PORT,
   POSTGRES_USER,
   POSTGRES_PASSWORD,
+  POSTGRES_HOST_DOCKER,
+  POSTGRES_PORT_DOCKER,
   POSTGRES_DB,
   AUTH_SECRET,
   REFRESH_TOKEN_SECRET,
@@ -31,6 +33,7 @@ const {
   RABBITMQ_URL,
   RABBITMQ_USERNAME,
   RABBITMQ_PASSWORD,
+  RABBITMQ_URL_DOCKER,
 } = process.env;
 
 if (NODE_ENV && !Object.values(NodeEnv).includes(NODE_ENV as NodeEnv)) {
@@ -49,7 +52,13 @@ if (!NOTIFICATION_HOST || !NOTIFICATION_PORT) {
   throw new Error('Notification config is not define');
 }
 
-if (!POSTGRES_HOST || !POSTGRES_PORT || !POSTGRES_DB) {
+if (
+  !POSTGRES_HOST ||
+  !POSTGRES_PORT ||
+  !POSTGRES_DB ||
+  !POSTGRES_PORT_DOCKER ||
+  !POSTGRES_HOST_DOCKER
+) {
   throw new Error('POSTGRES config is not define');
 }
 
@@ -71,7 +80,8 @@ if (
   !RABBITMQ_QUEUE ||
   !RABBITMQ_URL ||
   !RABBITMQ_USERNAME ||
-  !RABBITMQ_PASSWORD
+  !RABBITMQ_PASSWORD ||
+  !RABBITMQ_URL_DOCKER
 ) {
   throw new Error('RabbitMQ config is not define');
 }
@@ -95,6 +105,8 @@ export default {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_DB,
+  POSTGRES_HOST_DOCKER,
+  POSTGRES_PORT_DOCKER,
   AUTH_SECRET,
   REFRESH_TOKEN_SECRET,
   ACCESS_TOKEN_EXPIRES_IN,
@@ -108,4 +120,5 @@ export default {
   RABBITMQ_URL,
   RABBITMQ_USERNAME,
   RABBITMQ_PASSWORD,
+  RABBITMQ_URL_DOCKER,
 };

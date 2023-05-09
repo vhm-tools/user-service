@@ -1,27 +1,52 @@
+###################
+# BUILD FOR DEVELOPMENT
+###################
+
+FROM node:18-alpine AS development
+
+WORKDIR /usr/app
+
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+###################
+# BUILD FOR PRODUCTION
+###################
+
 FROM node:18-alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
-RUN yarn install
+COPY --from=development /usr/app/node_modules ./node_modules
 
 COPY . .
 
 RUN yarn build
 
+ARG NODE_ENV=production
+
+RUN yarn install --production --frozen-lockfile && yarn cache clean
+
+RUN wget https://gobinaries.com/tj/node-prune --output-document - | /bin/sh && node-prune
+
+###################
+# PRODUCTION
+###################
+
 FROM node:18-alpine AS production
+
+WORKDIR /app
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /usr/src/app
+COPY --from=builder /usr/app/node_modules ./node_modules
+COPY --from=builder /usr/app/dist ./dist
+COPY --from=builder /usr/app/.env ./.env
 
-COPY package*.json ./
-
-RUN npm ci --only=production
-
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/dist ./dist
-
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/src/main"]
