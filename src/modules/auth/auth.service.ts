@@ -56,7 +56,7 @@ export class AuthService {
       }
 
       return {
-        id: user.id,
+        sub: user.id,
         role: user.role,
       };
     }
@@ -88,14 +88,14 @@ export class AuthService {
     });
 
     return {
-      id: newUser.id,
+      sub: newUser.id,
       role: newUser.role,
     };
   }
 
   async login(payload: AuthPayload, headers: any): Promise<TokenResponse> {
     const user = await this.userRepository.findOne({
-      where: { id: payload.id },
+      where: { id: payload.sub },
       select: ['id', 'lastLogin', 'userAgent'],
     });
 
@@ -136,7 +136,7 @@ export class AuthService {
 
       if (currentTime > expireTime) {
         await this.setInfoLogin({
-          id: payload.id,
+          id: payload.sub,
           lastLogin: new Date(),
           refreshToken,
           userAgent,
@@ -144,7 +144,7 @@ export class AuthService {
       }
     } else {
       await this.setInfoLogin({
-        id: payload.id,
+        id: payload.sub,
         lastLogin: new Date(),
         refreshToken,
         userAgent,
@@ -156,7 +156,7 @@ export class AuthService {
 
   async logout(res: Response, payload: AuthPayload): Promise<void> {
     await this.userRepository.update(
-      { id: payload.id },
+      { id: payload.sub },
       { lastLogin: null, userAgent: null, refreshToken: null },
     );
 
@@ -184,23 +184,22 @@ export class AuthService {
     if (!user.refreshToken) {
       throw new BadRequestException('User not have refresh token');
     }
-    const isRefreshTokenMatching = bcrypt.compareSync(
-      refreshToken,
-      user.refreshToken,
-    );
+    const isMatching = bcrypt.compareSync(refreshToken, user.refreshToken);
 
-    if (!isRefreshTokenMatching) {
+    if (!isMatching) {
       throw new BadRequestException('Refresh token invalid');
     }
 
     return {
-      id: user.id,
+      sub: user.id,
       role: user.role,
     };
   }
 
   generateToken(payload: AuthPayload, hasRefreshToken = false): TokenResponse {
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, {
+      secret: env.AUTH_SECRET,
+    });
     if (hasRefreshToken) {
       const refreshToken = this.jwtService.sign(payload, {
         secret: env.REFRESH_TOKEN_SECRET,
@@ -216,7 +215,7 @@ export class AuthService {
     accessToken: string,
     refreshToken?: string,
   ): void {
-    res.cookie('vhm_token', accessToken, {
+    res.cookie(env.COOKIE_TOKEN_NAME, accessToken, {
       httpOnly: true,
       secure: true,
       signed: true,
@@ -225,7 +224,7 @@ export class AuthService {
     });
 
     if (refreshToken) {
-      res.cookie('vhm_refresh_token', refreshToken, {
+      res.cookie(env.COOKIE_REFRESH_TOKEN_NAME, refreshToken, {
         httpOnly: true,
         secure: true,
         maxAge: +env.REFRESH_TOKEN_EXPIRES_IN * 1000,
@@ -235,7 +234,16 @@ export class AuthService {
   }
 
   clearTokenCookies(res: Response): void {
-    res.clearCookie('vhm_token');
-    res.clearCookie('vhm_refresh_token');
+    res.clearCookie(env.COOKIE_TOKEN_NAME, {
+      httpOnly: true,
+      secure: true,
+      signed: true,
+      sameSite: env.NODE_ENV === NodeEnv.PRODUCTION ? 'lax' : 'strict',
+    });
+    res.clearCookie(env.COOKIE_REFRESH_TOKEN_NAME, {
+      httpOnly: true,
+      secure: true,
+      sameSite: env.NODE_ENV === NodeEnv.PRODUCTION ? 'lax' : 'strict',
+    });
   }
 }

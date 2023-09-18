@@ -24,6 +24,8 @@ const {
   REFRESH_TOKEN_SECRET,
   ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_EXPIRES_IN,
+  COOKIE_TOKEN_NAME,
+  COOKIE_REFRESH_TOKEN_NAME,
   COOKIE_SECRET,
   BCRYPT_SALT,
   GITHUB_CLIENT_ID,
@@ -72,6 +74,10 @@ if (
   throw new Error('Auth token config is not define');
 }
 
+if (!COOKIE_TOKEN_NAME || !COOKIE_REFRESH_TOKEN_NAME) {
+  throw new Error('Cookie name config is not define');
+}
+
 if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET || !GITHUB_CALLBACK_URL) {
   throw new Error('Github auth config is not define');
 }
@@ -111,6 +117,8 @@ export default {
   REFRESH_TOKEN_SECRET,
   ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_EXPIRES_IN,
+  COOKIE_TOKEN_NAME,
+  COOKIE_REFRESH_TOKEN_NAME,
   COOKIE_SECRET,
   BCRYPT_SALT,
   GITHUB_CLIENT_ID,

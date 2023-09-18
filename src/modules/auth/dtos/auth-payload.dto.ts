@@ -4,7 +4,7 @@ import { PartialType, PickType } from '@nestjs/swagger';
 import { Request } from 'express';
 
 export interface AuthPayload {
-  id: string;
+  sub: string;
   role: UserRole;
 }
 

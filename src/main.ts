@@ -10,7 +10,8 @@ import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import env from '@environments';
 import { setupSwagger } from '@configs';
-import { getLogsLevel, isProduction, runInCluster } from '@utils';
+import { getEnv, getLogsLevel, runInCluster } from '@utils';
+import { NodeEnv } from '@enums';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule, {
@@ -19,7 +20,7 @@ async function bootstrap() {
 
   app.use(cookieParser(env.AUTH_SECRET));
 
-  if (isProduction) {
+  if (getEnv() === NodeEnv.PRODUCTION) {
     app.use(
       helmet({
         frameguard: {
@@ -58,21 +59,9 @@ async function bootstrap() {
     defaultVersion: VERSION_NEUTRAL,
   });
 
-  setupSwagger(app);
-
-  // app.connectMicroservice({
-  //   transport: Transport.RMQ,
-  //   options: {
-  //     urls: [env.RABBITMQ_URL],
-  //     queue: env.RABBITMQ_QUEUE,
-  //     prefetchCount: 1,
-  //     queueOptions: {
-  //       durable: false,
-  //     },
-  //   },
-  // });
-
-  // await app.startAllMicroservices();
+  if (getEnv() === NodeEnv.DEVELOPMENT) {
+    setupSwagger(app);
+  }
   await app.listen(env.PORT);
 
   Logger.log(`🚀  Server is listening on port ${env.PORT}`, 'Bootstrap');
