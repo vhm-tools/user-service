@@ -15,7 +15,7 @@ import {
 import { OAuthProfile, User } from '@entities';
 import { UserAgent } from '@interfaces-db';
 import { UserStatus } from '@enums-db';
-import { NodeEnv } from '@enums';
+import { NodeEnv } from '@infra-common/enums';
 
 @Injectable()
 export class AuthService {

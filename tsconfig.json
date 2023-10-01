@@ -28,7 +28,7 @@
       "@enums-db": ["databases/enums"],
       "@interfaces-db": ["databases/interfaces"],
       "@share-libs": ["libs"],
-      "@infra-common": ["libs/infra-common"],
+      "@infra-common/*": ["libs/infra-common/*"],
       "@infra-modules": ["libs/infra-modules"]
     }
   },

@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { DatabaseLogger, SnakeCaseNamingStrategy } from '@utils';
+import { DatabaseLogger, SnakeCaseNamingStrategy } from '@infra-common/helpers';
 import env from '@environments';
 
 const {

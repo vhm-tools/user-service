@@ -1,4 +1,4 @@
-import { RabbitMQConfig } from '@infra-common';
+import { RabbitMQConfig } from '@infra-common/configs';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NotificationController } from './notification.controller';

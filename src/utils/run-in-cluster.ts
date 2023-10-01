@@ -1,6 +1,6 @@
 import * as cluster from 'cluster';
 import * as os from 'os';
-import { isProduction } from './common';
+import { isProduction } from '@infra-common/helpers';
 
 export const runInCluster = (bootstrap: () => Promise<void>) => {
   const clusterLib: any = cluster;
