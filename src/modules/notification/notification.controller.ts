@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { SendMailInput } from '@infra-common';
-import { NotificationService } from './notification.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
+import { NotificationService } from './notification.service';
+import { SendMailPayload } from '@infra-common/dtos';
 
 @Controller('notification')
 @ApiTags('Notification')
@@ -11,7 +11,7 @@ export class NotificationController {
 
   @Post('mail')
   @HttpCode(HttpStatus.ACCEPTED)
-  sendMail(@Body() payload: SendMailInput): Observable<any> {
+  sendMail(@Body() payload: SendMailPayload): Observable<any> {
     return this.notificationService.sendMail(payload);
   }
 }

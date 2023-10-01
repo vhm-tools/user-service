@@ -50,6 +50,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "helmet": "^6.1.4",
+    "nest-winston": "^1.9.4",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",
     "passport-jwt": "^4.0.1",
@@ -61,7 +62,8 @@
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.14",
     "ua-parser-js": "^1.0.35",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

@@ -1,13 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {
-  AuthGuard,
-  HttpExceptionFilter,
-  LoggerMiddleware,
-  ValidationPipe,
-} from '@common';
-import { TypeOrmConfigService } from '@configs';
+import { AuthGuard, ValidationPipe } from '@common';
+import { LoggerMiddleware } from '@infra-common/middlewares';
+import { HttpExceptionFilter } from '@infra-common/filters';
+import { TypeOrmConfigService } from '@infra-common/configs';
 import { AuthModule, HealthModule, NotificationModule } from '@modules';
 
 const modules = [HealthModule, AuthModule, NotificationModule];
@@ -20,10 +17,10 @@ const modules = [HealthModule, AuthModule, NotificationModule];
     ...modules,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,

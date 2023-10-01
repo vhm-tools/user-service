@@ -1,4 +1,4 @@
-import { NodeEnv } from '@enums';
+import { NodeEnv } from '@infra-common/enums';
 import * as dotenv from 'dotenv';
 
 dotenv.config();

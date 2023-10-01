@@ -10,8 +10,9 @@ import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import env from '@environments';
 import { setupSwagger } from '@configs';
-import { getEnv, getLogsLevel, runInCluster } from '@utils';
-import { NodeEnv } from '@enums';
+import { runInCluster } from '@utils';
+import { getEnv, getLogsLevel, isProduction } from '@infra-common/helpers';
+import { NodeEnv } from '@infra-common/enums';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule, {
@@ -20,7 +21,7 @@ async function bootstrap() {
 
   app.use(cookieParser(env.AUTH_SECRET));
 
-  if (getEnv() === NodeEnv.PRODUCTION) {
+  if (isProduction) {
     app.use(
       helmet({
         frameguard: {
@@ -36,10 +37,11 @@ async function bootstrap() {
         },
       }),
     );
-    app.enableCors({
-      origin: env.CORS_ORIGINS?.split('|'),
-    });
   }
+
+  app.enableCors({
+    origin: isProduction ? '*' : env.CORS_ORIGINS?.split('|'),
+  });
 
   app.setGlobalPrefix('api', {
     exclude: [
