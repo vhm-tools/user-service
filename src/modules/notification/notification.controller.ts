@@ -3,8 +3,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { SendMailPayload } from '@infra-common/dtos';
+import env from '@environments';
 
-@Controller('notification')
+@Controller(`v${env.API_VERSION}/notification`)
 @ApiTags('Notification')
 export class NotificationController {
   constructor(private notificationService: NotificationService) {}
