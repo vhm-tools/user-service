@@ -5,9 +5,14 @@ import { AuthGuard, ValidationPipe } from '@common';
 import { LoggerMiddleware } from '@infra-common/middlewares';
 import { HttpExceptionFilter } from '@infra-common/filters';
 import { TypeOrmConfigService } from '@infra-common/configs';
-import { AuthModule, HealthModule, NotificationModule } from '@modules';
+import {
+  AuthModule,
+  HealthModule,
+  NotificationModule,
+  TemplateModule,
+} from '@modules';
 
-const modules = [HealthModule, AuthModule, NotificationModule];
+const modules = [HealthModule, AuthModule, NotificationModule, TemplateModule];
 
 @Module({
   imports: [
