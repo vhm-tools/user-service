@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
+import { JwtModule } from '@nestjs/jwt';
+
+import { GithubStrategy, JwtRefreshStrategy } from './strategies';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { User, OAuthProfile } from '@entities';
-import { GithubStrategy, JwtRefreshStrategy } from './strategies';
-import { JwtModule } from '@nestjs/jwt';
+import {
+  User,
+  UserSchema,
+  OAuthProfile,
+  OAuthProfileSchema,
+} from '@database/mongo/schemas';
 import env from '@environments';
 
 /**
@@ -13,7 +19,10 @@ import env from '@environments';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, OAuthProfile]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: OAuthProfile.name, schema: OAuthProfileSchema },
+    ]),
     JwtModule.register({
       global: true,
       secret: env.AUTH_SECRET,

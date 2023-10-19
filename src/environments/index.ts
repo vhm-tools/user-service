@@ -13,6 +13,8 @@ const {
   CORS_ORIGINS,
   NOTIFICATION_HOST,
   NOTIFICATION_PORT,
+  MONGODB_URI,
+  MONGODB_URI_DOCKER,
   POSTGRES_HOST,
   POSTGRES_PORT,
   POSTGRES_USER,
@@ -65,6 +67,10 @@ if (
   throw new Error('POSTGRES config is not define');
 }
 
+if (!MONGODB_URI || !MONGODB_URI_DOCKER) {
+  throw new Error('MongoDB config is not define');
+}
+
 if (
   !AUTH_SECRET ||
   !REFRESH_TOKEN_SECRET ||
@@ -111,6 +117,8 @@ export default {
   NOTIFICATION_PORT,
   CORS_ORIGINS,
   VHM_API_KEY,
+  MONGODB_URI,
+  MONGODB_URI_DOCKER,
   POSTGRES_HOST,
   POSTGRES_PORT,
   POSTGRES_USER,

@@ -1,10 +1,11 @@
-import { User } from '@entities';
-import { UserRole } from '@enums-db';
+import { UserRole } from '@database/enums';
+import { User } from '@database/mongo/schemas';
 import { PartialType, PickType } from '@nestjs/swagger';
 import { Request } from 'express';
+import { Types } from 'mongoose';
 
 export interface AuthPayload {
-  sub: string;
+  sub: Types.ObjectId;
   role: UserRole;
 }
 
@@ -19,5 +20,5 @@ export class AuthRequestPayload extends Request {
 }
 
 export class LoginInfoPayload extends PartialType(
-  PickType(User, ['id', 'refreshToken', 'lastLogin', 'userAgent'] as const),
+  PickType(User, ['_id', 'refreshToken', 'lastLogin', 'userAgent'] as const),
 ) {}

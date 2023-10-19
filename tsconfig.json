@@ -24,9 +24,7 @@
       "@environments": ["src/environments"],
       "@modules": ["src/modules"],
       "@utils": ["src/utils"],
-      "@entities": ["databases/postgres/entities"],
-      "@enums-db": ["databases/enums"],
-      "@interfaces-db": ["databases/interfaces"],
+      "@database/*": ["databases/*"],
       "@share-libs": ["libs"],
       "@infra-common/*": ["libs/infra-common/*"],
       "@infra-modules": ["libs/infra-modules"]
