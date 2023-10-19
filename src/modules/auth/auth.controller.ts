@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Redirect,
   Req,
   Res,
   UseGuards,
@@ -16,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthRequestPayload } from './dtos';
+import env from '@environments';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -32,16 +34,17 @@ export class AuthController {
   @Get('github/callback')
   @Public()
   @UseGuards(GithubOAuthGuard)
+  @Redirect(`${env.CLIENT_URL}/admin`, HttpStatus.FOUND)
   @ApiExcludeEndpoint()
   async githubCallback(
     @Req() { user, headers }: AuthRequestPayload,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<void> {
+  ): Promise<any> {
     const { accessToken, refreshToken } = await this.authService.login(
       user,
       headers,
     );
-    this.authService.setAuthCookies(res, accessToken, refreshToken, true);
+    this.authService.setAuthCookies(res, accessToken, refreshToken);
   }
 
   @Get('refresh-token')

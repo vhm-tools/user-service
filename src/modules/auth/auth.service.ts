@@ -1,29 +1,30 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 import { UAParser } from 'ua-parser-js';
-import env from '@environments';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+
 import {
   AuthPayload,
   GithubPayload,
   LoginInfoPayload,
   TokenResponse,
 } from './dtos';
-import { OAuthProfile, User } from '@entities';
-import { UserAgent } from '@interfaces-db';
-import { UserStatus } from '@enums-db';
+import { OAuthProfile, User } from '@database/mongo/schemas';
+import { UserAgent } from '@database/interfaces';
+import { UserStatus } from '@database/enums';
 import { isProduction } from '@share-libs';
+import env from '@environments';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-    @InjectRepository(OAuthProfile)
-    private oauthProfileRepository: Repository<OAuthProfile>,
+    @InjectModel(User.name)
+    private userModel: Model<User>,
+    @InjectModel(OAuthProfile.name)
+    private oauthProfileModel: Model<OAuthProfile>,
     private jwtService: JwtService,
   ) {}
 
@@ -37,26 +38,25 @@ export class AuthService {
     /**
      * Return user if exists
      */
-    const user = await this.userRepository.findOne({
-      where: { email },
-      select: ['id', 'role'],
-    });
+    const user = await this.userModel.findOne({ email }, { role: 1 }).lean();
 
     if (user) {
-      const oauthProfile = await this.oauthProfileRepository.findOneBy({
-        userId: user.id,
-      });
+      const oauthProfile = await this.oauthProfileModel
+        .findOne({
+          userId: user._id,
+        })
+        .lean();
 
       if (!oauthProfile) {
-        await this.oauthProfileRepository.save({
+        await this.oauthProfileModel.create({
           provider,
           accessToken,
-          userId: user.id,
+          userId: user._id,
         });
       }
 
       return {
-        sub: user.id,
+        sub: user._id,
         role: user.role,
       };
     }
@@ -72,7 +72,7 @@ export class AuthService {
       lastName = displayName.split(' ').slice(-1).join(' ');
     }
 
-    const newUser = await this.userRepository.save({
+    const newUser = await this.userModel.create({
       username,
       firstName,
       lastName,
@@ -81,23 +81,27 @@ export class AuthService {
       status: UserStatus.ACTIVE,
     });
 
-    await this.oauthProfileRepository.save({
+    await this.oauthProfileModel.create({
       provider,
       accessToken,
       userId: newUser.id,
     });
 
     return {
-      sub: newUser.id,
+      sub: newUser._id,
       role: newUser.role,
     };
   }
 
   async login(payload: AuthPayload, headers: any): Promise<TokenResponse> {
-    const user = await this.userRepository.findOne({
-      where: { id: payload.sub },
-      select: ['id', 'lastLogin', 'userAgent'],
-    });
+    const user = await this.userModel
+      .findOne(
+        {
+          _id: payload.sub,
+        },
+        ['lastLogin', 'userAgent'],
+      )
+      .lean();
 
     if (!user) {
       throw new BadRequestException('User is not found');
@@ -136,7 +140,7 @@ export class AuthService {
 
       if (currentTime > expireTime) {
         await this.setInfoLogin({
-          id: payload.sub,
+          _id: payload.sub,
           lastLogin: new Date(),
           refreshToken,
           userAgent,
@@ -144,7 +148,7 @@ export class AuthService {
       }
     } else {
       await this.setInfoLogin({
-        id: payload.sub,
+        _id: payload.sub,
         lastLogin: new Date(),
         refreshToken,
         userAgent,
@@ -155,33 +159,32 @@ export class AuthService {
   }
 
   async logout(res: Response, payload: AuthPayload): Promise<void> {
-    await this.userRepository.update(
-      { id: payload.sub },
-      { lastLogin: null, userAgent: null, refreshToken: null },
+    await this.userModel.updateOne(
+      { _id: payload.sub },
+      { $set: { lastLogin: null, userAgent: null, refreshToken: null } },
     );
 
     this.clearTokenCookies(res);
   }
 
-  setInfoLogin(payload: LoginInfoPayload): Promise<UpdateResult> {
-    const { id, ...info } = payload;
+  async setInfoLogin(payload: LoginInfoPayload): Promise<void> {
+    const { _id, ...info } = payload;
     if (info.refreshToken) {
       const salt = bcrypt.genSaltSync();
       info.refreshToken = bcrypt.hashSync(info.refreshToken, salt);
     }
-    return this.userRepository.update({ id }, info);
+    await this.userModel.findByIdAndUpdate(_id, info);
   }
 
   async validateRefreshToken(
     refreshToken: string,
-    userId: string,
+    userId: Types.ObjectId,
   ): Promise<AuthPayload> {
-    const user = await this.userRepository.findOneOrFail({
-      where: { id: userId },
-      select: ['id', 'role', 'refreshToken'],
-    });
+    const user = await this.userModel
+      .findById(userId, ['role', 'refreshToken'])
+      .lean();
 
-    if (!user.refreshToken) {
+    if (!user || !user.refreshToken) {
       throw new BadRequestException('User not have refresh token');
     }
     const isMatching = bcrypt.compareSync(refreshToken, user.refreshToken);
@@ -191,7 +194,7 @@ export class AuthService {
     }
 
     return {
-      sub: user.id,
+      sub: user._id,
       role: user.role,
     };
   }
@@ -214,7 +217,6 @@ export class AuthService {
     res: Response,
     accessToken: string,
     refreshToken?: string,
-    isRedirect?: boolean,
   ): void {
     res.cookie(env.COOKIE_TOKEN_NAME, accessToken, {
       httpOnly: true,
@@ -231,10 +233,6 @@ export class AuthService {
         maxAge: +env.REFRESH_TOKEN_EXPIRES_IN * 1000,
         sameSite: isProduction ? 'lax' : 'strict',
       });
-    }
-
-    if (isRedirect) {
-      res.redirect(`${env.CLIENT_URL}/admin`);
     }
   }
 

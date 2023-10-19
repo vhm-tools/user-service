@@ -1,11 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthGuard, ValidationPipe } from '@common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerMiddleware } from '@infra-common/middlewares';
 import { HttpExceptionFilter } from '@infra-common/filters';
 import { TransformInterceptor } from '@infra-common/interceptors';
-import { TypeOrmConfigService } from '@infra-common/configs';
+import { MongooseConfigService } from '@infra-common/configs';
+import { AuthGuard, ValidationPipe } from '@common';
 import {
   AuthModule,
   HealthModule,
@@ -17,8 +17,8 @@ const modules = [HealthModule, AuthModule, NotificationModule, TemplateModule];
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmConfigService,
+    MongooseModule.forRootAsync({
+      useClass: MongooseConfigService,
     }),
     ...modules,
   ],
