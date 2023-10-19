@@ -5,7 +5,10 @@ import { NotificationService } from './notification.service';
 import { SendMailPayload } from '@infra-common/dtos';
 import env from '@environments';
 
-@Controller(`v${env.API_VERSION}/notification`)
+@Controller({
+  path: 'notification',
+  version: env.API_VERSION,
+})
 @ApiTags('Notification')
 export class NotificationController {
   constructor(private notificationService: NotificationService) {}

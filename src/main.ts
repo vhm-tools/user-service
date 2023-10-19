@@ -40,7 +40,8 @@ async function bootstrap() {
   }
 
   app.enableCors({
-    origin: isProduction ? '*' : env.CORS_ORIGINS?.split('|'),
+    origin: isProduction ? env.CORS_ORIGINS?.split('|') : env.CLIENT_URL,
+    credentials: true,
   });
 
   app.setGlobalPrefix('api', {
@@ -48,10 +49,6 @@ async function bootstrap() {
       {
         path: 'health/(.*)',
         method: RequestMethod.GET,
-      },
-      {
-        path: 'auth/(.*)',
-        method: RequestMethod.ALL,
       },
     ],
   });
