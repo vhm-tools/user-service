@@ -36,6 +36,7 @@ export class AuthGuard implements CanActivate {
       });
 
       request['user'] = payload;
+      request['isAuthenticated'] = true;
     } catch (error: any) {
       throw new UnauthorizedException();
     }
@@ -44,8 +45,8 @@ export class AuthGuard implements CanActivate {
 
   private extractToken(request: Request): string | undefined {
     const token =
-      request.signedCookies['vhm_token'] ||
-      request.cookies['vhm_token'] ||
+      request.signedCookies[env.COOKIE_TOKEN_NAME] ||
+      request.cookies[env.COOKIE_TOKEN_NAME] ||
       request.headers['authorization'];
 
     return token;

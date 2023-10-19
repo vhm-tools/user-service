@@ -36,6 +36,7 @@ const {
   RABBITMQ_USERNAME,
   RABBITMQ_PASSWORD,
   RABBITMQ_URL_DOCKER,
+  CLIENT_URL,
 } = process.env;
 
 if (NODE_ENV && !Object.values(NodeEnv).includes(NODE_ENV as NodeEnv)) {
@@ -96,6 +97,10 @@ if (!VHM_API_KEY) {
   throw new Error('API key config is not define');
 }
 
+if (!CLIENT_URL) {
+  throw new Error('Client url config is not define');
+}
+
 export default {
   PORT,
   NODE_ENV,
@@ -129,4 +134,5 @@ export default {
   RABBITMQ_USERNAME,
   RABBITMQ_PASSWORD,
   RABBITMQ_URL_DOCKER,
+  CLIENT_URL,
 };

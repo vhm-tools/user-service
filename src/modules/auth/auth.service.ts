@@ -15,7 +15,7 @@ import {
 import { OAuthProfile, User } from '@entities';
 import { UserAgent } from '@interfaces-db';
 import { UserStatus } from '@enums-db';
-import { NodeEnv } from '@infra-common/enums';
+import { isProduction } from '@share-libs';
 
 @Injectable()
 export class AuthService {
@@ -125,14 +125,14 @@ export class AuthService {
       ).getTime();
       const currentTime = new Date().getTime();
 
-      if (currentTime < expireTime) {
-        const exceptionMsg =
-          JSON.stringify(user.userAgent) === JSON.stringify(userAgent)
-            ? 'You are already logged in on this device'
-            : 'You are already logged in on another device';
+      // if (currentTime < expireTime) {
+      //   const exceptionMsg =
+      //     JSON.stringify(user.userAgent) === JSON.stringify(userAgent)
+      //       ? 'You are already logged in on this device'
+      //       : 'You are already logged in on another device';
 
-        throw new BadRequestException(exceptionMsg);
-      }
+      //   throw new BadRequestException(exceptionMsg);
+      // }
 
       if (currentTime > expireTime) {
         await this.setInfoLogin({
@@ -214,36 +214,41 @@ export class AuthService {
     res: Response,
     accessToken: string,
     refreshToken?: string,
+    isRedirect?: boolean,
   ): void {
     res.cookie(env.COOKIE_TOKEN_NAME, accessToken, {
       httpOnly: true,
-      secure: true,
+      secure: isProduction,
       signed: true,
       maxAge: +env.ACCESS_TOKEN_EXPIRES_IN * 1000,
-      sameSite: env.NODE_ENV === NodeEnv.PRODUCTION ? 'lax' : 'strict',
+      sameSite: isProduction ? 'lax' : 'strict',
     });
 
     if (refreshToken) {
       res.cookie(env.COOKIE_REFRESH_TOKEN_NAME, refreshToken, {
         httpOnly: true,
-        secure: true,
+        secure: isProduction,
         maxAge: +env.REFRESH_TOKEN_EXPIRES_IN * 1000,
-        sameSite: env.NODE_ENV === NodeEnv.PRODUCTION ? 'lax' : 'strict',
+        sameSite: isProduction ? 'lax' : 'strict',
       });
+    }
+
+    if (isRedirect) {
+      res.redirect(`${env.CLIENT_URL}/admin`);
     }
   }
 
   clearTokenCookies(res: Response): void {
     res.clearCookie(env.COOKIE_TOKEN_NAME, {
       httpOnly: true,
-      secure: true,
+      secure: isProduction,
       signed: true,
-      sameSite: env.NODE_ENV === NodeEnv.PRODUCTION ? 'lax' : 'strict',
+      sameSite: isProduction ? 'lax' : 'strict',
     });
     res.clearCookie(env.COOKIE_REFRESH_TOKEN_NAME, {
       httpOnly: true,
-      secure: true,
-      sameSite: env.NODE_ENV === NodeEnv.PRODUCTION ? 'lax' : 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'lax' : 'strict',
     });
   }
 }

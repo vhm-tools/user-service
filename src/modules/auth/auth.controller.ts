@@ -41,7 +41,7 @@ export class AuthController {
       user,
       headers,
     );
-    this.authService.setAuthCookies(res, accessToken, refreshToken);
+    this.authService.setAuthCookies(res, accessToken, refreshToken, true);
   }
 
   @Get('refresh-token')
@@ -63,5 +63,12 @@ export class AuthController {
     @Req() { user }: AuthRequestPayload,
   ): Promise<void> {
     return this.authService.logout(res, user);
+  }
+
+  @Get('check')
+  checkAuth(@Req() { isAuthenticated }: AuthRequestPayload): {
+    data: { isAuthenticated: boolean };
+  } {
+    return { data: { isAuthenticated } };
   }
 }
