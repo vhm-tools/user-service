@@ -15,9 +15,10 @@ import {
   ApiNoContentResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { IResponseType } from '@infra-common/interfaces';
+import env from '@environments';
 import { AuthService } from './auth.service';
 import { AuthRequestPayload } from './dtos';
-import env from '@environments';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -69,9 +70,9 @@ export class AuthController {
   }
 
   @Get('check')
-  checkAuth(@Req() { isAuthenticated }: AuthRequestPayload): {
-    data: { isAuthenticated: boolean };
-  } {
+  checkAuth(
+    @Req() { isAuthenticated }: AuthRequestPayload,
+  ): IResponseType<{ isAuthenticated: boolean }> {
     return { data: { isAuthenticated } };
   }
 }
