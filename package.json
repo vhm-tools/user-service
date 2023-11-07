@@ -25,7 +25,9 @@
     "dbm:run": "npm run typeorm -- migration:run",
     "dbm:down": "npm run typeorm -- migration:revert",
     "dbm:generate": "npm run typeorm -- migration:generate migrations/$npm_config_name",
-    "dbm:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:create migrations/$npm_config_name"
+    "dbm:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:create migrations/$npm_config_name",
+    "init:submod": "git submodule update --init --recursive",
+    "update:submod": "git submodule update --remote --merge"
   },
   "dependencies": {
     "@nestjs/axios": "^2.0.0",
