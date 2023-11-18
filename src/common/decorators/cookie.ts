@@ -1,8 +1,14 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const Cookies = createParamDecorator(
-  (data: string, ctx: ExecutionContext) => {
+export const Cookies = createParamDecorator<string>(
+  (key: string, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return data ? request.signedCookies?.[data] : request.signedCookies;
+    const signedCookies = request.signedCookies;
+
+    if (!signedCookies) {
+      return null;
+    }
+
+    return key ? signedCookies[key] : signedCookies;
   },
 );

@@ -3,3 +3,6 @@
 
 # yarn enforce-branch-name '(hotfix|bugfix|chore|feat|refactor)/.+' --ignore '(staging|develop|master|main)'
 yarn lint-staged
+
+# Pre-CI
+# act -s GITHUB_TOKEN="$(gh auth token)"

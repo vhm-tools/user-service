@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerMiddleware } from '@infra-common/middlewares';
-import { HttpExceptionFilter } from '@infra-common/filters';
+import { HttpExceptionFilter } from '@infra-common/exceptions';
 import { TransformInterceptor } from '@infra-common/interceptors';
 import { MongooseConfigService } from '@infra-common/configs';
 import { AuthGuard, ValidationPipe } from '@common';

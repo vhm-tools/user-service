@@ -15,7 +15,7 @@ import {
 import { OAuthProfile, User } from '@database/mongo/schemas';
 import { UserAgent } from '@database/interfaces';
 import { UserStatus } from '@database/enums';
-import { isProduction } from '@share-libs';
+import { isProduction } from '@infra-common/helpers';
 import env from '@environments';
 
 @Injectable()
@@ -56,7 +56,7 @@ export class AuthService {
       }
 
       return {
-        sub: user._id,
+        sub: user._id.toString(),
         role: user.role,
       };
     }
@@ -88,7 +88,7 @@ export class AuthService {
     });
 
     return {
-      sub: newUser._id,
+      sub: newUser._id.toString(),
       role: newUser.role,
     };
   }
@@ -140,7 +140,7 @@ export class AuthService {
 
       if (currentTime > expireTime) {
         await this.setInfoLogin({
-          _id: payload.sub,
+          _id: new Types.ObjectId(payload.sub),
           lastLogin: new Date(),
           refreshToken,
           userAgent,
@@ -148,7 +148,7 @@ export class AuthService {
       }
     } else {
       await this.setInfoLogin({
-        _id: payload.sub,
+        _id: new Types.ObjectId(payload.sub),
         lastLogin: new Date(),
         refreshToken,
         userAgent,
@@ -178,7 +178,7 @@ export class AuthService {
 
   async validateRefreshToken(
     refreshToken: string,
-    userId: Types.ObjectId,
+    userId: string,
   ): Promise<AuthPayload> {
     const user = await this.userModel
       .findById(userId, ['role', 'refreshToken'])
@@ -194,7 +194,7 @@ export class AuthService {
     }
 
     return {
-      sub: user._id,
+      sub: user._id.toString(),
       role: user.role,
     };
   }

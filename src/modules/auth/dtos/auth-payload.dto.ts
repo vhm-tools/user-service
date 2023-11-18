@@ -2,10 +2,9 @@ import { UserRole } from '@database/enums';
 import { User } from '@database/mongo/schemas';
 import { PartialType, PickType } from '@nestjs/swagger';
 import { Request } from 'express';
-import { Types } from 'mongoose';
 
 export interface AuthPayload {
-  sub: Types.ObjectId;
+  sub: string;
   role: UserRole;
 }
 

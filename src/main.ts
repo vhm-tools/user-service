@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import {
   Logger,
   RequestMethod,
@@ -11,8 +11,12 @@ import * as cookieParser from 'cookie-parser';
 import env from '@environments';
 import { setupSwagger } from '@configs';
 import { runInCluster } from '@utils';
-import { getEnv, getLogsLevel, isProduction } from '@infra-common/helpers';
-import { NodeEnv } from '@infra-common/enums';
+import {
+  getLogsLevel,
+  isDevelopment,
+  isProduction,
+} from '@infra-common/helpers';
+import { AllExceptionsFilter } from '@infra-common/exceptions';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule, {
@@ -20,6 +24,9 @@ async function bootstrap() {
   });
 
   app.use(cookieParser(env.AUTH_SECRET));
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   if (isProduction) {
     app.use(
@@ -44,6 +51,11 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: VERSION_NEUTRAL,
+  });
+
   app.setGlobalPrefix('api', {
     exclude: [
       {
@@ -53,12 +65,7 @@ async function bootstrap() {
     ],
   });
 
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: VERSION_NEUTRAL,
-  });
-
-  if (getEnv() === NodeEnv.DEVELOPMENT) {
+  if (isDevelopment) {
     setupSwagger(app);
   }
   await app.listen(env.PORT);
