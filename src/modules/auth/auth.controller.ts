@@ -19,6 +19,7 @@ import { IResponseType } from '@infra-common/interfaces';
 import env from '@environments';
 import { AuthService } from './auth.service';
 import { AuthRequestPayload } from './dtos';
+import { MESSAGE_CODE } from '@infra-common/constants';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -73,6 +74,6 @@ export class AuthController {
   checkAuth(
     @Req() { isAuthenticated }: AuthRequestPayload,
   ): IResponseType<{ isAuthenticated: boolean }> {
-    return { data: { isAuthenticated } };
+    return { data: { isAuthenticated }, code: MESSAGE_CODE.SUCCESS };
   }
 }
