@@ -1,5 +1,5 @@
 ## Installation
-vhm
+
 ```bash
 $ npm install
 ```
@@ -29,5 +29,3 @@ vhm
 # test coverage
 $ npm run test:cov
 ```
-
-VHM
