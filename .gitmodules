@@ -1,7 +1,9 @@
 [submodule "databases"]
 	path = databases
+  branch = dev
   url = git@github.com:vhm-tools/databases.git
 
 [submodule "libs"]
 	path = libs
+  branch = dev
 	url = git@github.com:vhm-tools/common-libs.git
