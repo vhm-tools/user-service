@@ -27,7 +27,7 @@ import { AuthPayload } from '../auth/dtos';
 export class TemplateController {
   constructor(private readonly templateService: TemplateService) {}
 
-  @Post('create')
+  @Post()
   @HttpCode(HttpStatus.OK)
   create(
     @Body() payload: CreateTemplateDto,
@@ -36,7 +36,7 @@ export class TemplateController {
     return this.templateService.create(payload, user.sub);
   }
 
-  @Patch('update')
+  @Patch()
   @HttpCode(HttpStatus.OK)
   update(
     @Body() payload: UpdateTemplateDto,
@@ -45,7 +45,7 @@ export class TemplateController {
     return this.templateService.update(user.sub, payload);
   }
 
-  @Delete('delete/:templateId')
+  @Delete(':templateId')
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(
     @Param('templateId') templateId: string,
