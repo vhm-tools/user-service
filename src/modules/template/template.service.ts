@@ -2,14 +2,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IResponseType } from '@infra-common/interfaces';
-import { Template } from '@database/mongo/schemas';
+import { Template, Workflow } from '@database/mongo/schemas';
 import { CreateTemplateDto, UpdateTemplateDto } from './dtos';
+import { WORKFLOW_TYPE } from '@common';
+import { WorkflowChannel, WorkflowType } from '@database/enums';
 
 @Injectable()
 export class TemplateService {
   constructor(
     @InjectModel(Template.name)
     private readonly templateModel: Model<Template>,
+    @InjectModel(Workflow.name)
+    private readonly workflowModel: Model<Workflow>,
   ) {}
 
   async create(
@@ -29,6 +33,25 @@ export class TemplateService {
     }
 
     const newTemplate = await this.templateModel.create({ ...payload, userId });
+
+    if (payload.steps) {
+      const steps: Array<Partial<Workflow>> = [];
+
+      for (const { id, label } of payload.steps) {
+        const isAction = WORKFLOW_TYPE['actions'].includes(id);
+
+        const workflowData: Partial<Workflow> = {
+          name: label,
+          type: isAction ? WorkflowType.ACTION : WorkflowType.CHANNEL,
+          channel: id as WorkflowChannel,
+          templateId: newTemplate._id,
+        };
+
+        steps.push(workflowData);
+        // const workflow = this.workflowModel.create(step);
+      }
+    }
+
     return { data: newTemplate };
   }
 

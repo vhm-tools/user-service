@@ -1,5 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsArray, ValidateNested } from 'class-validator';
+
+class WorkflowStep {
+  @ApiProperty()
+  @IsString()
+  id: string;
+
+  @ApiProperty()
+  @IsString()
+  label: string;
+}
 
 export class CreateTemplateDto {
   @ApiProperty()
@@ -10,4 +20,9 @@ export class CreateTemplateDto {
   @IsString()
   @IsOptional()
   description: string;
+
+  @ApiProperty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  steps: WorkflowStep[];
 }
