@@ -13,6 +13,8 @@ import {
   SmsChannelSchema,
   Template,
   TemplateSchema,
+  Workflow,
+  WorkflowSchema,
 } from '@database/mongo/schemas';
 
 @Module({
@@ -27,6 +29,10 @@ import {
           { name: SmsChannel.name, schema: SmsChannelSchema },
           { name: DelayAction.name, schema: DelayActionSchema },
         ],
+      },
+      {
+        name: Workflow.name,
+        schema: WorkflowSchema,
       },
     ]),
   ],
