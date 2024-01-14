@@ -1,4 +1,4 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import {
   Logger,
   RequestMethod,
@@ -16,7 +16,6 @@ import {
   isDevelopment,
   isProduction,
 } from '@infra-common/helpers';
-import { AllExceptionsFilter } from '@infra-common/exceptions';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule, {
@@ -24,9 +23,6 @@ async function bootstrap() {
   });
 
   app.use(cookieParser(env.AUTH_SECRET));
-
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   if (isProduction) {
     app.use(

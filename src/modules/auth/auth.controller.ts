@@ -71,6 +71,7 @@ export class AuthController {
   }
 
   @Get('check')
+  @ApiExcludeEndpoint()
   checkAuth(
     @Req() { isAuthenticated }: AuthRequestPayload,
   ): IResponseType<{ isAuthenticated: boolean }> {
