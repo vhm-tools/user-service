@@ -8,16 +8,24 @@ import {
   Get,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserAuth } from '@common';
 import { IResponseType } from '@infra-common/interfaces';
 import env from '@environments';
 
-import { Template } from '@database/mongo/schemas';
-import { CreateTemplateDto, UpdateTemplateDto } from './dtos';
+import {
+  CreateTemplateBodyDto,
+  UpdateTemplateBodyDto,
+  ListTemplateResponseDto,
+  ListTemplateQueryDto,
+  GetTemplateResponseDto,
+  CreateTemplateResponseDto,
+} from './dtos';
 import { TemplateService } from './template.service';
 import { AuthPayload } from '../auth/dtos';
+import { PageDto } from 'src/common/dtos/pagination.dto';
 
 @Controller({
   path: 'templates',
@@ -29,20 +37,21 @@ export class TemplateController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: CreateTemplateResponseDto })
   create(
-    @Body() payload: CreateTemplateDto,
+    @Body() payload: CreateTemplateBodyDto,
     @UserAuth() user: AuthPayload,
-  ): Promise<IResponseType<Template>> {
+  ): Promise<IResponseType<CreateTemplateResponseDto>> {
     return this.templateService.create(payload, user.sub);
   }
 
   @Patch()
   @HttpCode(HttpStatus.OK)
   update(
-    @Body() payload: UpdateTemplateDto,
+    @Body() payload: UpdateTemplateBodyDto,
     @UserAuth() user: AuthPayload,
-  ): Promise<IResponseType<Template>> {
-    return this.templateService.update(user.sub, payload);
+  ): Promise<IResponseType<boolean>> {
+    return this.templateService.update(payload, user.sub);
   }
 
   @Delete(':templateId')
@@ -56,18 +65,21 @@ export class TemplateController {
 
   @Get(':templateId')
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: GetTemplateResponseDto })
   getTemplateById(
     @Param('templateId') templateId: string,
     @UserAuth() user: AuthPayload,
-  ): Promise<IResponseType<Template>> {
+  ): Promise<IResponseType<GetTemplateResponseDto>> {
     return this.templateService.getTemplateById(templateId, user.sub);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: PageDto<ListTemplateResponseDto> })
   getListTemplates(
+    @Query() query: ListTemplateQueryDto,
     @UserAuth() user: AuthPayload,
-  ): Promise<IResponseType<Template[]>> {
-    return this.templateService.getListTemplates(user.sub);
+  ): Promise<IResponseType<PageDto<ListTemplateResponseDto>>> {
+    return this.templateService.getListTemplates(query, user.sub);
   }
 }

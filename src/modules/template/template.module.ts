@@ -23,17 +23,15 @@ import {
       {
         name: Template.name,
         schema: TemplateSchema,
-        discriminators: [
-          { name: EmailChannel.name, schema: EmailChannelSchema },
-          { name: PushChannel.name, schema: PushChannelSchema },
-          { name: SmsChannel.name, schema: SmsChannelSchema },
-          { name: DelayAction.name, schema: DelayActionSchema },
-        ],
       },
       {
         name: Workflow.name,
         schema: WorkflowSchema,
       },
+      { name: EmailChannel.name, schema: EmailChannelSchema },
+      { name: PushChannel.name, schema: PushChannelSchema },
+      { name: SmsChannel.name, schema: SmsChannelSchema },
+      { name: DelayAction.name, schema: DelayActionSchema },
     ]),
   ],
   controllers: [TemplateController],

@@ -2,9 +2,12 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerMiddleware } from '@infra-common/middlewares';
-import { HttpExceptionFilter } from '@infra-common/exceptions';
+import { AllExceptionsFilter } from '@infra-common/exceptions';
 import { TransformInterceptor } from '@infra-common/interceptors';
-import { MongooseConfigService } from '@infra-common/configs';
+import {
+  MongooseConfigService,
+  WinstonConfigService,
+} from '@infra-common/configs';
 import { AuthGuard, ValidationPipe } from '@common';
 import {
   AuthModule,
@@ -12,6 +15,7 @@ import {
   NotificationModule,
   TemplateModule,
 } from '@modules';
+import { WinstonModule } from 'nest-winston';
 
 const modules = [HealthModule, AuthModule, NotificationModule, TemplateModule];
 
@@ -19,6 +23,9 @@ const modules = [HealthModule, AuthModule, NotificationModule, TemplateModule];
   imports: [
     MongooseModule.forRootAsync({
       useClass: MongooseConfigService,
+    }),
+    WinstonModule.forRootAsync({
+      useClass: WinstonConfigService,
     }),
     ...modules,
   ],
@@ -37,7 +44,7 @@ const modules = [HealthModule, AuthModule, NotificationModule, TemplateModule];
     },
     {
       provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
+      useClass: AllExceptionsFilter,
     },
   ],
 })
