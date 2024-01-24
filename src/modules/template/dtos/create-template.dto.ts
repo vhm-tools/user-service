@@ -22,6 +22,10 @@ export class CreateTemplateBodyDto {
   description: string;
 
   @ApiProperty()
+  @IsString()
+  flows: string;
+
+  @ApiProperty()
   @IsArray()
   @ValidateNested({ each: true })
   steps: WorkflowStep[];
@@ -30,6 +34,9 @@ export class CreateTemplateBodyDto {
 export class CreateTemplateResponseDto {
   @ApiResponseProperty()
   name: string;
+
+  @ApiResponseProperty()
+  flows: string;
 
   @ApiResponseProperty()
   description: string;

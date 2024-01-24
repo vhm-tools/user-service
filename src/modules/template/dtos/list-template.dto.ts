@@ -11,5 +11,8 @@ export class ListTemplateResponseDto {
   name: string;
 
   @ApiResponseProperty()
+  flows: string;
+
+  @ApiResponseProperty()
   description: string;
 }

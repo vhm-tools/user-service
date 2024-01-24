@@ -84,36 +84,36 @@ export class TemplateService {
   }
 
   async update(
+    templateId: string,
     payload: UpdateTemplateBodyDto,
-    id: string,
+    userId: string,
   ): Promise<IResponseType<boolean>> {
-    const template = await this.templateModel.findByIdAndUpdate(id, payload, {
-      new: true,
-    });
-    if (!template) {
+    const templateUpdated = await this.templateModel.findOneAndUpdate(
+      {
+        _id: templateId,
+        userId,
+      },
+      payload,
+      {
+        new: true,
+      },
+    );
+    if (!templateUpdated) {
       throw new HttpException('Template not found', HttpStatus.NOT_FOUND);
     }
     return { data: true, code: MESSAGE_CODE.ACTIONS.UPDATE_SUCCESS };
   }
 
-  async delete(id: string, userId: string): Promise<IResponseType> {
+  async delete(id: string, userId: string): Promise<void> {
     const templateDeleted = await this.templateModel.findOneAndDelete({
       _id: id,
       userId,
     });
     if (!templateDeleted) {
-      return {
-        message: 'Delete template failed',
-        code: MESSAGE_CODE.ACTIONS.DELETE_FAILED,
-      };
+      throw new HttpException('Template not found', HttpStatus.NOT_FOUND);
     }
 
     await this.workflowModel.deleteMany({ templateId: id });
-
-    return {
-      message: 'Delete template success',
-      code: MESSAGE_CODE.ACTIONS.DELETE_SUCCESS,
-    };
   }
 
   async getTemplateById(
