@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
+import { PartialType, PickType } from '@nestjs/swagger';
 import { CreateTemplateBodyDto } from './create-template.dto';
 
-export class UpdateTemplateBodyDto extends PartialType(CreateTemplateBodyDto) {}
+export class UpdateTemplateBodyDto extends PartialType(
+  PickType(CreateTemplateBodyDto, ['name', 'description'] as const),
+) {}

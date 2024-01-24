@@ -15,4 +15,3 @@ prod-start() {
 dev-start() {
   yarn start:dev
 }
-

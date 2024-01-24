@@ -45,13 +45,14 @@ export class TemplateController {
     return this.templateService.create(payload, user.sub);
   }
 
-  @Patch()
+  @Patch(':templateId')
   @HttpCode(HttpStatus.OK)
   update(
+    @Param('templateId') templateId: string,
     @Body() payload: UpdateTemplateBodyDto,
     @UserAuth() user: AuthPayload,
   ): Promise<IResponseType<boolean>> {
-    return this.templateService.update(payload, user.sub);
+    return this.templateService.update(templateId, payload, user.sub);
   }
 
   @Delete(':templateId')
@@ -59,7 +60,7 @@ export class TemplateController {
   delete(
     @Param('templateId') templateId: string,
     @UserAuth() user: AuthPayload,
-  ): Promise<IResponseType> {
+  ): Promise<void> {
     return this.templateService.delete(templateId, user.sub);
   }
 

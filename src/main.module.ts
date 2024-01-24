@@ -14,10 +14,17 @@ import {
   HealthModule,
   NotificationModule,
   TemplateModule,
+  WorkflowModule,
 } from '@modules';
 import { WinstonModule } from 'nest-winston';
 
-const modules = [HealthModule, AuthModule, NotificationModule, TemplateModule];
+const modules = [
+  HealthModule,
+  AuthModule,
+  NotificationModule,
+  TemplateModule,
+  WorkflowModule,
+];
 
 @Module({
   imports: [
