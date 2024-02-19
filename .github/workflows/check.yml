@@ -31,6 +31,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Check for circular dependencies
+      run: yarn dlx madge --circular ./src ./databases ./libs
+
     - name: Install dependencies
       uses: borales/actions-yarn@v3
       with:
